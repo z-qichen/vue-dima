@@ -6,10 +6,12 @@
     </div>
     <!-- 显示对应的业务组件 -->
     <div class="center">
-      <!--  Router-View  配合v-slot 把当前路由匹配到的conponent暴露出来，结构获得Component属性，这个属性就是对于的路由匹配到的组件-->
       <Router-View v-slot="{ Component }">
-        <!--component 特殊属性，is判断是否渲染对应组件  -->
-        <component :is="Component" />
+        <component
+          :is="Component"
+          :status="store.coms[store.currentMaterialCom].status"
+          :serialNum="1"
+        />
       </Router-View>
     </div>
     <!-- 编辑面板 -->
@@ -17,7 +19,14 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+// import { computed } from 'vue';
+import { useMaterialStore } from '@/stores/useMaterial';
+// 数据仓库
+const store = useMaterialStore();
+// 获取当前选中组件的状态数据
+// const currentCom = computed(() => store.coms[store.currentMaterialCom]);
+</script>
 
 <style scoped lang="scss">
 .layout-container {
@@ -51,3 +60,4 @@
   border-left: 1px solid var(--border-color);
 }
 </style>
+

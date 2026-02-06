@@ -2,14 +2,25 @@
   <div>
     <div class="container mb-15">
       <!-- 标题 -->
-      <h2 class="title font-weight-100">这是一个标题</h2>
+      <h2 class="title font-weight-100">{{ title }}</h2>
       <!-- 描述 -->
-      <div class="desc">这是一个描述</div>
+      <div class="desc">{{ desc }}</div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const props = defineProps({
+  title: {
+    type: String,
+    required: true
+  },
+  desc:{
+    type: String,
+    required: true
+  }
+})
+</script>
 
 <style scoped lang="scss">
 .container {

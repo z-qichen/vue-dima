@@ -31,7 +31,7 @@ export default function () {
       },
       desc: {
         id: uuidv4(),
-        status: '单选题默认描述',
+        status: '单选题默认描述----',
         isShow: true,
         name: 'desc-editor',
         editCom: markRaw(DescEditor),
@@ -46,7 +46,7 @@ export default function () {
       },
       position: {
         id: uuidv4(),
-        currentStatus: 0,
+        currentStatus: 1,
         status: ['左对齐', '居中对齐'],
         isShow: true,
         name: 'position-editor',
