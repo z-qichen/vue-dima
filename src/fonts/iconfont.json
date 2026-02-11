@@ -1,0 +1,30 @@
+{
+  "id": "5126385",
+  "name": "dima",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1024124",
+      "name": "大小写",
+      "font_class": "daxiaoxie",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "1522773",
+      "name": "大写",
+      "font_class": "daxie",
+      "unicode": "e63b",
+      "unicode_decimal": 58939
+    },
+    {
+      "icon_id": "1522822",
+      "name": "小写",
+      "font_class": "xiaoxie",
+      "unicode": "e63d",
+      "unicode_decimal": 58941
+    }
+  ]
+}

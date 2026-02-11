@@ -21,6 +21,7 @@
 import EditPannel from '@/components/SurveyComs/EditItems/EditorPanel.vue';
 import { computed, provide } from 'vue';
 import { useMaterialStore } from '@/stores/useMaterial';
+import { ElMessage } from 'element-plus';
 // 数据仓库
 const store = useMaterialStore();
 // 获取当前选中组件的状态数据
@@ -36,10 +37,43 @@ const updateStatus = (configKey: string, payload?: number | string | boolean | o
       }
       store.setTextStatus(currentCom.value.status[configKey], payload);
     }
-  }
-  console.log(configKey);
+    case 'options': {
+      if (typeof payload === 'number') {
+        // 说明是删除选项
+        console.log(payload);
 
-};
+        const result = store.removeOption(currentCom.value.status[configKey], payload);
+        if (result) ElMessage.success('删除成功');
+        else ElMessage.error('至少保留两个选项');
+      } else {
+        console.log(payload);
+
+        // 说明是新增选项
+        store.addOption(currentCom.value.status[configKey]);
+      }
+    }
+    case 'position': {
+      if (typeof payload === 'number')
+        store.changePosition(currentCom.value.status[configKey], payload)
+    }
+    case 'titleSize':
+    case 'descSize': {
+      if (typeof payload === 'number') {
+        store.changeSize(currentCom.value.status[configKey], payload)
+      }
+    }
+    case 'titleWeight':
+    case 'descWeight': {
+      if (typeof payload === 'number')
+        store.changeWeight(currentCom.value.status[configKey], payload)
+    }
+    case 'titleItalic':
+    case 'descItalic': {
+      if (typeof payload === 'number')
+        store.changeItalic(currentCom.value.status[configKey], payload)
+    }
+  }
+}
 provide('updateStatus', updateStatus);
 </script>
 

@@ -1,7 +1,7 @@
 // 组件市场里面所有组件状态的仓库
 import { defineStore } from 'pinia';
 import { defaultStatusMap } from '@/configs/defaultStatus/defaultStatusMap';
-import { setTextStatus } from './actions';
+import { setTextStatus,addOption,removeOption,changePosition,changeSize,changeWeight,changeItalic} from './actions';
 
 export const useMaterialStore = defineStore('materialStore', {
   state: () => ({
@@ -13,5 +13,11 @@ export const useMaterialStore = defineStore('materialStore', {
   }),
   actions: {
     setTextStatus,
+    addOption,
+    removeOption,
+    changePosition,
+    changeSize,
+    changeWeight,
+    changeItalic
   },
 });

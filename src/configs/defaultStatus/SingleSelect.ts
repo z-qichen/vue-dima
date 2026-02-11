@@ -24,7 +24,7 @@ export default function () {
     status: {
       title: {
         id: uuidv4(),
-        status: '单选题默认标题',
+        status: '单选题默认9999',
         isShow: true,
         name: 'title-editor',
         editCom: markRaw(TitleEditor),
@@ -62,7 +62,7 @@ export default function () {
       },
       descSize: {
         id: uuidv4(),
-        currentStatus: 0,
+        currentStatus: 2,
         status: ['16', '14', '12'],
         isShow: true,
         name: 'size-editor',

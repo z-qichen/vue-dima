@@ -14,16 +14,16 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowLeft } from '@element-plus/icons-vue'
-import { useRouter } from 'vue-router'
-const router = useRouter()
-import { ref } from 'vue'
+import { ArrowLeft } from '@element-plus/icons-vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+import { ref } from 'vue';
 
 const goHome = () => {
-  router.push('/')
-}
+  router.push('/');
+};
 
-const avatar = ref('https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
+const avatar = ref('https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif');
 </script>
 
 <style scoped lang="scss">
@@ -31,16 +31,19 @@ const avatar = ref('https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4ac
   width: 100%;
   height: 50px;
   border-bottom: 1px solid var(--border-color);
+
   .left {
     width: 60px;
     height: 100%;
   }
+
   .center {
     flex: 1;
     height: 100%;
     border-left: 1px solid var(--border-color);
     border-right: 1px solid var(--border-color);
   }
+
   .right {
     width: 80px;
     height: 100%;
