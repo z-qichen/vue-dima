@@ -1,7 +1,13 @@
 <template>
   <div key="id">
     <div class="mb-10">描述内容</div>
-    <el-input :rows="5" type="textarea" placeholder="请输入题目标题" v-model="text" @update:modelValue="inputHandle" />
+    <el-input
+      :rows="5"
+      type="textarea"
+      placeholder="请输入题目标题"
+      v-model="text"
+      @update:modelValue="inputHandle"
+    />
   </div>
 </template>
 

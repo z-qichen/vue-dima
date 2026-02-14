@@ -33,10 +33,12 @@ const router = useRouter();
 const tableData = ref([]);
 
 const goToEditor = () => {
+  localStorage.setItem('activeView', 'editor');
   router.push('/editor');
 };
 
 const goToComMarket = () => {
+  localStorage.setItem('activeView', 'materials');
   router.push('/materials');
 };
 </script>

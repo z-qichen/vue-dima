@@ -10,4 +10,3 @@ export interface Status {
   id: string;
   status: OptionsStatus;
 }
-

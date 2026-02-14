@@ -17,7 +17,7 @@ const props = defineProps<{
 }>();
 
 const text = ref(props.status);
-const updateStatus: Function = inject('updateStatus')!;
+const updateStatus = inject('updateStatus');
 
 function inputHandle(newVal: string) {
   updateStatus(props.configKey, newVal);

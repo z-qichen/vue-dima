@@ -24,14 +24,14 @@ export default function () {
     status: {
       title: {
         id: uuidv4(),
-        status: '单选题默认9999',
+        status: '单选题默认标题!!!',
         isShow: true,
         name: 'title-editor',
         editCom: markRaw(TitleEditor),
       },
       desc: {
         id: uuidv4(),
-        status: '单选题默认描述----',
+        status: '单选题默认描述~~~',
         isShow: true,
         name: 'desc-editor',
         editCom: markRaw(DescEditor),
@@ -46,7 +46,7 @@ export default function () {
       },
       position: {
         id: uuidv4(),
-        currentStatus: 1,
+        currentStatus: 0,
         status: ['左对齐', '居中对齐'],
         isShow: true,
         name: 'position-editor',
@@ -62,7 +62,7 @@ export default function () {
       },
       descSize: {
         id: uuidv4(),
-        currentStatus: 2,
+        currentStatus: 0,
         status: ['16', '14', '12'],
         isShow: true,
         name: 'size-editor',

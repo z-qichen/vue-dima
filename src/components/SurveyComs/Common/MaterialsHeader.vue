@@ -2,24 +2,34 @@
   <div>
     <div class="container mb-15">
       <!-- 标题 -->
-      <h2 class="title font-weight-100" :style="{
-        fontSize: `${titleSize}px`,
-        color: titleColor,
-      }">
+      <h2
+        class="title font-weight-100"
+        :style="{
+          fontSize: `${titleSize}px`,
+          color: titleColor,
+        }"
+      >
         <span class="mr-10">{{ serialNum }}.</span>
-        <span :class="{
-          'font-bold': !titleWeight,
-          'font-italic': !titleItalic,
-        }">{{ title }}</span>
+        <span
+          :class="{
+            'font-bold': !titleWeight,
+            'font-italic': !titleItalic,
+          }"
+          >{{ title }}</span
+        >
       </h2>
       <!-- 描述 -->
-      <div class="desc" :class="{
-        'font-bold': !descWeight,
-        'font-italic': !descItalic,
-      }" :style="{
+      <div
+        class="desc"
+        :class="{
+          'font-bold': !descWeight,
+          'font-italic': !descItalic,
+        }"
+        :style="{
           fontSize: `${descSize}px`,
           color: descColor,
-        }">
+        }"
+      >
         {{ desc }}
       </div>
     </div>
@@ -77,15 +87,13 @@ defineProps({
 
 <style scoped lang="scss">
 .container {
-  >h2 {
+  > h2 {
     font-size: 20px;
-
-    >span {
+    > span {
       margin: 0 5px;
     }
   }
 }
-
 .desc {
   font-size: var(--font-size-base);
   color: var(--font-color-light);

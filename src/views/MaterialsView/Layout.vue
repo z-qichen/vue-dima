@@ -7,7 +7,11 @@
     <!-- 显示对应的业务组件 -->
     <div class="center">
       <Router-View v-slot="{ Component }">
-        <component :is="Component" :status="store.coms[store.currentMaterialCom].status" :serialNum="1" />
+        <component
+          :is="Component"
+          :status="store.coms[store.currentMaterialCom].status"
+          :serialNum="1"
+        />
       </Router-View>
     </div>
     <!-- 编辑面板 -->
@@ -18,10 +22,12 @@
 </template>
 
 <script setup lang="ts">
-import EditPannel from '@/components/SurveyComs/EditItems/EditorPanel.vue';
+import EditPannel from '@/components/SurveyComs/EditItems/EditPannel.vue';
 import { computed, provide } from 'vue';
 import { useMaterialStore } from '@/stores/useMaterial';
 import { ElMessage } from 'element-plus';
+import type { PicLink } from '@/types';
+import { isPicLink } from '@/types';
 // 数据仓库
 const store = useMaterialStore();
 // 获取当前选中组件的状态数据
@@ -34,47 +40,52 @@ const updateStatus = (configKey: string, payload?: number | string | boolean | o
     case 'desc': {
       if (typeof payload !== 'string') {
         console.error('Invalid payload type for "title or desc". Expected string.');
+        return;
       }
       store.setTextStatus(currentCom.value.status[configKey], payload);
+      break;
     }
     case 'options': {
       if (typeof payload === 'number') {
         // 说明是删除选项
-        console.log(payload);
-
         const result = store.removeOption(currentCom.value.status[configKey], payload);
         if (result) ElMessage.success('删除成功');
         else ElMessage.error('至少保留两个选项');
+      } else if (typeof payload === 'object' && isPicLink(payload)) {
+        // 说明是在设置图片的链接
+        store.setPicLinkByIndex(currentCom.value.status[configKey], payload);
       } else {
-        console.log(payload);
-
         // 说明是新增选项
         store.addOption(currentCom.value.status[configKey]);
       }
+      break;
     }
     case 'position': {
-      if (typeof payload === 'number')
-        store.changePosition(currentCom.value.status[configKey], payload)
+      if (typeof payload !== 'number') {
+        console.error('Invalid payload type for "position". Expected number.');
+        return;
+      }
+      store.setPosition(currentCom.value.status[configKey], payload);
+      break;
     }
     case 'titleSize':
     case 'descSize': {
-      if (typeof payload === 'number') {
-        store.changeSize(currentCom.value.status[configKey], payload)
+      if (typeof payload !== 'number') {
+        console.error('Invalid payload type for "titleSize or descSize". Expected number.');
+        return;
       }
-    }
-    case 'titleWeight':
-    case 'descWeight': {
-      if (typeof payload === 'number')
-        store.changeWeight(currentCom.value.status[configKey], payload)
-    }
-    case 'titleItalic':
-    case 'descItalic': {
-      if (typeof payload === 'number')
-        store.changeItalic(currentCom.value.status[configKey], payload)
+      store.setSize(currentCom.value.status[configKey], payload);
+      break;
     }
   }
-}
+};
+
+const getLink = (link: PicLink) => {
+  updateStatus('options', link);
+};
+
 provide('updateStatus', updateStatus);
+provide('getLink', getLink);
 </script>
 
 <style scoped lang="scss">
@@ -88,14 +99,12 @@ provide('updateStatus', updateStatus);
   border-bottom-left-radius: var(--border-radius-lg);
   border-bottom-right-radius: var(--border-radius-lg);
 }
-
 .left {
   width: 180px;
   text-align: center;
   align-items: flex-start;
   padding: 20px;
 }
-
 .center {
   width: 550px;
   // 多减去的60px是上下的padding，，最后20px是额外多减去一部分，避免贴底
@@ -104,7 +113,6 @@ provide('updateStatus', updateStatus);
   padding: 30px;
   border-left: 1px solid var(--border-color);
 }
-
 .right {
   width: 350px;
   height: calc(100vh - 100px - 40px - 20px);

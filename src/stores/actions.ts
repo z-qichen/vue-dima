@@ -1,19 +1,14 @@
-import type { TextProps ,OptionsProps ,StringStatusArr} from '@/types';
-import {isStringArray} from '@/types'
-
+import type { TextProps, OptionsProps, PicLink } from '@/types';
+import { isStringArray, isPicTitleDescStatusArr } from '@/types';
 export function setTextStatus(textProps: TextProps, text: string) {
   textProps.status = text;
 }
 
 export function addOption(optionProps: OptionsProps) {
   if (isStringArray(optionProps.status)) {
-    let lastIndex = optionProps.status.length -1
-    let lastString = optionProps.status[lastIndex]
-    console.log(lastString);
- 
-    let lastNum = +lastString?.substring(lastString.length-1)! 
-    //小bug，大于两位数及以上，会从0开始
-    optionProps.status.push(`新选项${lastNum+1}`);
+    optionProps.status.push('新选项');
+  } else if (isPicTitleDescStatusArr(optionProps.status)) {
+    optionProps.status.push({ picTitle: '图片标题', picDesc: '图片描述', value: '' });
   }
 }
 
@@ -25,18 +20,19 @@ export function removeOption(optionProps: OptionsProps, index: number) {
   return true;
 }
 
-export function changePosition(optionProps: OptionsProps,pointStatus:number){
-  optionProps.currentStatus = pointStatus
+export function setPosition(optionProps: OptionsProps, index: number) {
+  optionProps.currentStatus = index;
 }
 
-export function changeSize(optionProps: OptionsProps,pointStatus:number){
-   optionProps.currentStatus = pointStatus
+export function setSize(optionProps: OptionsProps, index: number) {
+  optionProps.currentStatus = index;
 }
 
-export function changeWeight(optionProps: OptionsProps,pointStatus:number){
-  optionProps.currentStatus = pointStatus
-}
-
-export function changeItalic(optionProps: OptionsProps,pointStatus:number){
-  optionProps.currentStatus = pointStatus
+export function setPicLinkByIndex(optionProps: OptionsProps, payload: PicLink) {
+  console.log(optionProps, 'optionPropsoptionPropsoptionProps');
+  console.log(payload, 'payloadpayloadpayload');
+  if (isPicTitleDescStatusArr(optionProps.status)) {
+    console.log('first');
+    optionProps.status[payload.index].value = payload.link;
+  }
 }

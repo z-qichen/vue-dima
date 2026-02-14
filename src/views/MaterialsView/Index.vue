@@ -1,5 +1,5 @@
 <template>
-  <Header></Header>
+  <Header />
   <div>
     <h1 class="font-weight-100 text-center m0 p0">组件市场</h1>
     <div class="container mc flex">
@@ -51,9 +51,16 @@
 </template>
 
 <script setup lang="ts">
-import Header from '@/components/common/Header.vue'
+import Header from '@/components/Common/Header.vue';
 // 引入对应图标
-import { CircleCheck, Files, EditPen, ChatLineSquare, User, Message } from '@element-plus/icons-vue'
+import {
+  CircleCheck,
+  Files,
+  EditPen,
+  ChatLineSquare,
+  User,
+  Message,
+} from '@element-plus/icons-vue';
 </script>
 
 <style scoped lang="scss">
