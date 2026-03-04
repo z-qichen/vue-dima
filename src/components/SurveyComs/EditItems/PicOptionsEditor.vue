@@ -8,14 +8,8 @@
       <!-- 选项 -->
       <div class="title mt-10 mb-10 flex align-items-center">
         <span>选项{{ index + 1 }}</span>
-        <el-button
-          type="danger"
-          class="ml-5 delete"
-          size="small"
-          :icon="Minus"
-          circle
-          @click="removeOptionHandle(index)"
-        />
+        <el-button type="danger" class="ml-5 delete" size="small" :icon="Minus" circle
+          @click="removeOptionHandle(index)" />
       </div>
       <!-- 是否上传图片 -->
       <div class="mb-5">
@@ -36,7 +30,7 @@
 <script setup lang="ts">
 import { ref, inject } from 'vue';
 import { Plus, Minus } from '@element-plus/icons-vue';
-import type { VueComType, PicTitleDescStatusArr } from '@/types';
+import type { VueComType, PicTitleDescStatusArr } from '@/utils/types';
 import { ElMessage, ElMessageBox } from 'element-plus';
 const props = defineProps<{
   currentStatus: number;
@@ -85,6 +79,7 @@ const deletePic = (index: number) => {
   color: var(--font-color-light);
   font-size: var(--font-size-base);
 }
+
 .delete {
   transform: scale(0.8);
 }

@@ -2,7 +2,7 @@ import type { VueComType } from './common';
 
 export interface BaseProps {
   id: string;
-  isShown: boolean;
+  isShow: boolean;
   name: string;
   editCom: VueComType;
 }
@@ -46,6 +46,18 @@ export interface OptionsStatus extends BaseStatus {
   options: OptionsProps;
 }
 
+export interface TypeStatus extends BaseStatus {
+  type: OptionsProps;
+}
+
+export function IsOptionsStatus(status: BaseStatus): status is OptionsStatus {
+  return 'options' in status;
+}
+
+export function IsTypeStatus(status: BaseStatus): status is TypeStatus {
+  return 'type' in status;
+}
+
 // 确定 status 是字符串数组
 export function isStringArray(status: OptionsStatusArr): status is string[] {
   return Array.isArray(status) && typeof status[0] === 'string';
@@ -76,3 +88,9 @@ export type PicLink = { link: string; index: number };
 export function isPicLink(obj: object): obj is PicLink {
   return 'link' in obj && 'index' in obj;
 }
+export type GetLink = (obj: PicLink) => void;
+
+export type UpdateStatus = (
+  configKey: string,
+  payload?: number | string | boolean | PicLink,
+) => void;

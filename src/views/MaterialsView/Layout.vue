@@ -7,11 +7,7 @@
     <!-- 显示对应的业务组件 -->
     <div class="center">
       <Router-View v-slot="{ Component }">
-        <component
-          :is="Component"
-          :status="store.coms[store.currentMaterialCom].status"
-          :serialNum="1"
-        />
+        <component :is="Component" :status="store.coms[store.currentMaterialCom].status" :serialNum="1" />
       </Router-View>
     </div>
     <!-- 编辑面板 -->
@@ -26,8 +22,8 @@ import EditPannel from '@/components/SurveyComs/EditItems/EditPannel.vue';
 import { computed, provide } from 'vue';
 import { useMaterialStore } from '@/stores/useMaterial';
 import { ElMessage } from 'element-plus';
-import type { PicLink } from '@/types';
-import { isPicLink } from '@/types';
+import type { PicLink } from '@/utils/types';
+import { isPicLink } from '@/utils/types';
 // 数据仓库
 const store = useMaterialStore();
 // 获取当前选中组件的状态数据
@@ -99,12 +95,14 @@ provide('getLink', getLink);
   border-bottom-left-radius: var(--border-radius-lg);
   border-bottom-right-radius: var(--border-radius-lg);
 }
+
 .left {
   width: 180px;
   text-align: center;
   align-items: flex-start;
   padding: 20px;
 }
+
 .center {
   width: 550px;
   // 多减去的60px是上下的padding，，最后20px是额外多减去一部分，避免贴底
@@ -113,6 +111,7 @@ provide('getLink', getLink);
   padding: 30px;
   border-left: 1px solid var(--border-color);
 }
+
 .right {
   width: 350px;
   height: calc(100vh - 100px - 40px - 20px);

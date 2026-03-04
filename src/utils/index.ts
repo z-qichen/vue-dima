@@ -1,6 +1,6 @@
 // 工具库
-import type { TextProps, OptionsProps } from '@/types';
-import { isStringArray, isPicTitleDescStatusArr } from '@/types';
+import type { TextProps, OptionsProps } from '@/utils/types';
+import { isStringArray, isPicTitleDescStatusArr } from '@/utils/types';
 
 export function getTextStatus(props: TextProps) {
   return props.status;

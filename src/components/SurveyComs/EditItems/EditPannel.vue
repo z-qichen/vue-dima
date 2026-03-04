@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Status } from '@/types';
+import type { Status } from '@/utils/types';
 defineProps<{
   com: Status;
 }>();

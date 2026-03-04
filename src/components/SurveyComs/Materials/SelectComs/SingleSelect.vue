@@ -1,22 +1,12 @@
 <template>
-  <div
-    :class="{
-      'text-center': computedState.position,
-    }"
-  >
-    <MaterialsHeader
-      :serialNum="serialNum"
-      :title="computedState.title"
-      :desc="computedState.desc"
-      :titleSize="computedState.titleSize"
-      :descSize="computedState.descSize"
-      :titleWeight="computedState.titleWeight"
-      :descWeight="computedState.descWeight"
-      :titleItalic="computedState.titleItalic"
-      :descItalic="computedState.descItalic"
-      :titleColor="computedState.titleColor"
-      :descColor="computedState.descColor"
-    />
+  <div :class="{
+    'text-center': computedState.position,
+  }">
+    <MaterialsHeader :serialNum="serialNum" :title="computedState.title" :desc="computedState.desc"
+      :titleSize="computedState.titleSize" :descSize="computedState.descSize" :titleWeight="computedState.titleWeight"
+      :descWeight="computedState.descWeight" :titleItalic="computedState.titleItalic"
+      :descItalic="computedState.descItalic" :titleColor="computedState.titleColor"
+      :descColor="computedState.descColor" />
     <div class="radio-group">
       <el-radio-group>
         <el-radio v-for="(item, index) in computedState.options" :value="item" :key="index">{{
@@ -30,7 +20,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import MaterialsHeader from '@/components/SurveyComs/Common/MaterialsHeader.vue';
-import type { OptionsStatus } from '@/types';
+import type { OptionsStatus } from '@/utils/types';
 import {
   getTextStatus,
   getStringStatus,
