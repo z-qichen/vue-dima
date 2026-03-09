@@ -24,6 +24,7 @@
 <script setup lang="ts">
 import { inject } from 'vue';
 import ButtonGroup from './ButtonGroup.vue';
+import type { VueComType, UpdateStatus } from '@/types';
 const props = defineProps<{
   currentStatus: number;
   status: string[];
@@ -31,9 +32,11 @@ const props = defineProps<{
   configKey: string;
   editCom: VueComType;
 }>();
-const updateStatus = inject('updateStatus');
+const updateStatus = inject<UpdateStatus>('updateStatus');
 const changePosition = (pos: number) => {
-  updateStatus(props.configKey, pos);
+  if (updateStatus) {
+    updateStatus(props.configKey, pos);
+  }
 };
 </script>
 

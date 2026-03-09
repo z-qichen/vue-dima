@@ -1,6 +1,6 @@
 <template>
   <Layout>
-    <Router-link class="link-item mb-15">备注说明</Router-link>
+    <Router-link to="" class="link-item mb-15">备注说明</Router-link>
   </Layout>
 </template>
 

@@ -7,7 +7,11 @@
     <!-- 显示对应的业务组件 -->
     <div class="center">
       <Router-View v-slot="{ Component }">
-        <component :is="Component" :status="store.coms[store.currentMaterialCom].status" :serialNum="1" />
+        <component
+          :is="Component"
+          :status="store.coms[store.currentMaterialCom].status"
+          :serialNum="1"
+        />
       </Router-View>
     </div>
     <!-- 编辑面板 -->
@@ -22,16 +26,25 @@ import EditPannel from '@/components/SurveyComs/EditItems/EditPannel.vue';
 import { computed, provide } from 'vue';
 import { useMaterialStore } from '@/stores/useMaterial';
 import { ElMessage } from 'element-plus';
-import type { PicLink } from '@/utils/types';
-import { isPicLink } from '@/utils/types';
+import type { PicLink, MaterialStore } from '@/types';
+import { isPicLink, IsTypeStatus, IsOptionsStatus } from '@/types';
+import { changeEditorIsShowStatus } from '@/utils';
 // 数据仓库
-const store = useMaterialStore();
+const store = useMaterialStore() as unknown as MaterialStore;
 // 获取当前选中组件的状态数据
 const currentCom = computed(() => store.coms[store.currentMaterialCom]);
 
-const updateStatus = (configKey: string, payload?: number | string | boolean | object) => {
+const updateStatus = (configKey: string, payload?: number | string | boolean | PicLink) => {
   // 拿到新的状态数据之后，就应该去修改仓库里面的数据
   switch (configKey) {
+    case 'type': {
+      if (typeof payload === 'number' && IsTypeStatus(currentCom.value.status)) {
+        // 切换其他编辑器的显示状态
+        changeEditorIsShowStatus(currentCom.value.status, payload);
+        store.setCurrentStatus(currentCom.value.status[configKey], payload);
+      }
+      break;
+    }
     case 'title':
     case 'desc': {
       if (typeof payload !== 'string') {
@@ -42,18 +55,19 @@ const updateStatus = (configKey: string, payload?: number | string | boolean | o
       break;
     }
     case 'options': {
-      if (typeof payload === 'number') {
-        // 说明是删除选项
-        const result = store.removeOption(currentCom.value.status[configKey], payload);
-        if (result) ElMessage.success('删除成功');
-        else ElMessage.error('至少保留两个选项');
-      } else if (typeof payload === 'object' && isPicLink(payload)) {
-        // 说明是在设置图片的链接
-        store.setPicLinkByIndex(currentCom.value.status[configKey], payload);
-      } else {
-        // 说明是新增选项
-        store.addOption(currentCom.value.status[configKey]);
-      }
+      if (IsOptionsStatus(currentCom.value.status))
+        if (typeof payload === 'number') {
+          // 说明是删除选项
+          const result = store.removeOption(currentCom.value.status[configKey], payload);
+          if (result) ElMessage.success('删除成功');
+          else ElMessage.error('至少保留两个选项');
+        } else if (typeof payload === 'object' && isPicLink(payload)) {
+          // 说明是在设置图片的链接
+          store.setPicLinkByIndex(currentCom.value.status[configKey], payload);
+        } else {
+          // 说明是新增选项
+          store.addOption(currentCom.value.status[configKey]);
+        }
       break;
     }
     case 'position': {
@@ -70,7 +84,7 @@ const updateStatus = (configKey: string, payload?: number | string | boolean | o
         console.error('Invalid payload type for "titleSize or descSize". Expected number.');
         return;
       }
-      store.setSize(currentCom.value.status[configKey], payload);
+      store.setCurrentStatus(currentCom.value.status[configKey], payload);
       break;
     }
   }
@@ -95,14 +109,12 @@ provide('getLink', getLink);
   border-bottom-left-radius: var(--border-radius-lg);
   border-bottom-right-radius: var(--border-radius-lg);
 }
-
 .left {
   width: 180px;
   text-align: center;
   align-items: flex-start;
   padding: 20px;
 }
-
 .center {
   width: 550px;
   // 多减去的60px是上下的padding，，最后20px是额外多减去一部分，避免贴底
@@ -111,7 +123,6 @@ provide('getLink', getLink);
   padding: 30px;
   border-left: 1px solid var(--border-color);
 }
-
 .right {
   width: 350px;
   height: calc(100vh - 100px - 40px - 20px);

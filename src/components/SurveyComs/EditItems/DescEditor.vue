@@ -1,13 +1,19 @@
 <template>
   <div key="id">
     <div class="mb-10">描述内容</div>
-    <el-input :rows="5" type="textarea" placeholder="请输入题目标题" v-model="text" @update:modelValue="inputHandle" />
+    <el-input
+      :rows="5"
+      type="textarea"
+      placeholder="请输入题目标题"
+      v-model="text"
+      @update:modelValue="inputHandle"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, inject } from 'vue';
-import type { VueComType } from '@/utils/types';
+import type { VueComType, UpdateStatus } from '@/types';
 const props = defineProps<{
   status: string;
   isShow: boolean;
@@ -17,9 +23,11 @@ const props = defineProps<{
 }>();
 
 const text = ref(props.status);
-const updateStatus = inject('updateStatus');
+const updateStatus = inject<UpdateStatus>('updateStatus');
 
 function inputHandle(newVal: string) {
-  updateStatus(props.configKey, newVal);
+  if (updateStatus) {
+    updateStatus(props.configKey, newVal);
+  }
 }
 </script>

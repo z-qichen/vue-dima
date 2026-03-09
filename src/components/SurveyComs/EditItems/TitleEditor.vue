@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { ref, inject } from 'vue';
-import type { VueComType } from '@/types';
+import type { VueComType, UpdateStatus } from '@/types';
 const props = defineProps<{
   status: string;
   isShow: boolean;
@@ -17,9 +17,11 @@ const props = defineProps<{
 }>();
 
 const text = ref(props.status);
-const updateStatus = inject('updateStatus');
+const updateStatus = inject<UpdateStatus>('updateStatus');
 
 function inputHandle(newVal: string) {
-  updateStatus(props.configKey, newVal);
+  if (updateStatus) {
+    updateStatus(props.configKey, newVal);
+  }
 }
 </script>

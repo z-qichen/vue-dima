@@ -6,9 +6,22 @@ import {
   addOption,
   removeOption,
   setPosition,
-  setSize,
+  setCurrentStatus,
   setPicLinkByIndex,
 } from './actions';
+import { updateInitStatusBeforeAdd } from '@/utils';
+import type { Material, Status } from '@/types';
+
+// 哪些业务组件需要初始化
+const keyToInit = ['personal-info-gender', 'personal-info-education'] as Material[];
+
+const initializedStates: { [key: string]: Status } = {};
+
+keyToInit.forEach((key) => {
+  const defaultStatus = defaultStatusMap[key]() as Status;
+  updateInitStatusBeforeAdd(defaultStatus, key);
+  initializedStates[key] = defaultStatus;
+});
 
 export const useMaterialStore = defineStore('materialStore', {
   state: () => ({
@@ -17,7 +30,9 @@ export const useMaterialStore = defineStore('materialStore', {
     coms: {
       'single-select': defaultStatusMap['single-select'](),
       'single-pic-select': defaultStatusMap['single-pic-select'](),
-      'text-note': defaultStatusMap['text-note']()
+      'text-note': defaultStatusMap['text-note'](),
+      'personal-info-gender': initializedStates['personal-info-gender'],
+      'personal-info-education': initializedStates['personal-info-education'],
     },
   }),
   actions: {
@@ -29,7 +44,7 @@ export const useMaterialStore = defineStore('materialStore', {
     addOption,
     removeOption,
     setPosition,
-    setSize,
+    setCurrentStatus,
     setPicLinkByIndex,
   },
 });

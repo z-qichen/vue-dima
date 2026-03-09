@@ -21,6 +21,7 @@
 <script setup lang="ts">
 import { ref, inject } from 'vue';
 import { Plus, Minus } from '@element-plus/icons-vue';
+import type { VueComType, UpdateStatus } from '@/types';
 const props = defineProps<{
   status: string[];
   isShow: boolean;
@@ -30,13 +31,17 @@ const props = defineProps<{
 }>();
 
 const textArr = ref(props.status);
-const updateStatus = inject('updateStatus');
+const updateStatus = inject<UpdateStatus>('updateStatus');
 const addOptionHandle = () => {
-  updateStatus(props.configKey);
+  if (updateStatus) {
+    updateStatus(props.configKey);
+  }
 };
 
 const removeOption = (index: number) => {
-  updateStatus(props.configKey, index);
+  if (updateStatus) {
+    updateStatus(props.configKey, index);
+  }
 };
 </script>
 

@@ -34,6 +34,7 @@ import { ref, inject, watch } from 'vue';
 import { Upload } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 import type { UploadProps } from 'element-plus';
+import type { GetLink } from '@/types';
 const props = defineProps({
   picTitle: {
     type: String,
@@ -52,7 +53,7 @@ const props = defineProps({
     default: 0,
   },
 });
-const getLink = inject('getLink');
+const getLink = inject<GetLink>('getLink');
 const imageUrl = ref('');
 
 watch(
@@ -76,8 +77,6 @@ watch(
 
 // 上传成功的回调
 const handleAvatarSuccess: UploadProps['onSuccess'] = async (response) => {
-  // console.log(response, 'response');
-  // imageUrl.value = URL.createObjectURL(uploadFile.raw!);
   if (getLink) {
     getLink({
       index: props.index,

@@ -1,7 +1,7 @@
 <template>
   <Layout>
-    <Router-link class="link-item mb-15">评价/打分</Router-link>
-    <Router-link class="link-item mb-15">日期/时间</Router-link>
+    <Router-link to="" class="link-item mb-15">评价/打分</Router-link>
+    <Router-link to="" class="link-item mb-15">日期/时间</Router-link>
   </Layout>
 </template>
 

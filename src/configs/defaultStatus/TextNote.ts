@@ -1,6 +1,7 @@
 // 备注说明基础状态
-
-import TextNote from '@/components/SurveyComs/Materials/NoteComs/TextNote.vue'
+import TextNote from '@/components/SurveyComs/Materials/NoteComs/TextNote.vue';
+// 编辑组件
+// 编辑组件
 import TitleEditor from '@/components/SurveyComs/EditItems/TitleEditor.vue';
 import DescEditor from '@/components/SurveyComs/EditItems/DescEditor.vue';
 import PositionEditor from '@/components/SurveyComs/EditItems/PositionEditor.vue';

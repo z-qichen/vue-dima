@@ -1,12 +1,13 @@
 import type { defineComponent } from 'vue';
-import type { OptionsStatus } from './editProps';
+import type { OptionsStatus, Material, TypeStatus } from '@/types';
 
 // 导出 vue 组件类型
 export type VueComType = ReturnType<typeof defineComponent>;
 
+// 组件状态，也就是包含了 type、name、id、status 这些属性
 export interface Status {
   type: VueComType;
-  name: string;
+  name: Material;
   id: string;
-  status: OptionsStatus;
+  status: OptionsStatus | TypeStatus;
 }
