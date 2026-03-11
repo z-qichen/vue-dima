@@ -1,7 +1,7 @@
 
 import { defineStore } from 'pinia';
 import type { Status } from '@/types';
-// import { isSurveyComName } from '@/types';
+import { isSurveyComName } from '@/types';
 import {
   setTextStatus,
   addOption,
@@ -23,10 +23,10 @@ export const useEditorStore = defineStore("editor", {
     setPosition,
     setCurrentStatus,
     setPicLinkByIndex,
-    // addCom(newCom: Status) {
-    //   this.coms.push(newCom);
-    //   this.currentComponentIndex = -1;
-    //   if (isSurveyComName(newCom.name)) this.surveyCount++;
-    // },
+    addCom(newCom: Status) {
+      this.coms.push(newCom);
+      this.currentComponentIndex = -1;
+      if (isSurveyComName(newCom.name)) this.surveyCount++;
+    },
   },
 })

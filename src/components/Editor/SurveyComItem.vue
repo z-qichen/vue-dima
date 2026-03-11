@@ -9,10 +9,26 @@
 </template>
 
 <script setup lang="ts">
+import { defaultStatusMap } from '@/configs/defaultStatus/defaultStatusMap';
+import { updateInitStatusBeforeAdd } from '@/utils';
+import type { Material, Status } from '@/types';
+import { useEditorStore } from '@/stores/useEditor';
+const store = useEditorStore();
+// 事件总线
+import EventBus from '@/utils/eventBus';
+
 const props = defineProps(['item']);
 const addSurveyCom = () => {
-  console.log(props.item);
-
+  const newSurveyComName = props.item.materialName as Material;
+  if (!newSurveyComName) {
+    console.warn('请先选择题型');
+    return;
+  }
+  const newSurveyComStatus = defaultStatusMap[newSurveyComName]() as Status;
+  updateInitStatusBeforeAdd(newSurveyComStatus, newSurveyComName);
+  store.addCom(newSurveyComStatus);
+  // 每次添加了新的组件，都要滚动到底部
+  EventBus.emit('scrollToBottom');
 };
 
 </script>

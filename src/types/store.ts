@@ -24,3 +24,19 @@ export interface MaterialStore extends Actions {
   coms: Record<Material, Status>;
   setCurrentSurveyCom: (com: Material) => void;
 }
+
+export type  surveyComsArr = [
+  'single-select',
+   'single-pic-select',
+  'personal-info-gender',
+  'personal-info-education'
+]
+export function isSurveyComName(name: string): name is SurveyComName {
+  const surveyComs: surveyComsArr = [
+    'single-select',
+    'single-pic-select',
+    'personal-info-gender',
+    'personal-info-education',
+  ];
+  return surveyComs.includes(name as SurveyComName);
+}
