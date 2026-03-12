@@ -28,5 +28,9 @@ export const useEditorStore = defineStore("editor", {
       this.currentComponentIndex = -1;
       if (isSurveyComName(newCom.name)) this.surveyCount++;
     },
+     setCurrentComponentIndex(index: number) {
+      this.currentComponentIndex = index;
+    },
+    }
   },
-})
+)
