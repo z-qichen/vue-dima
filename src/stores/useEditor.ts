@@ -13,10 +13,10 @@ import {
 
 export const useEditorStore = defineStore("editor", {
   state: () => ({
-     currentComponentIndex: -1, // 当前选中的组件索引，一开始都没有选中，所以是-1
+    currentComponentIndex: -1, // 当前选中的组件索引，一开始都没有选中，所以是-1
     surveyCount: 0, // 问卷题目的数量
     coms: [] as Status[], // 问卷题目的数组
-  }),actions: {
+  }), actions: {
     setTextStatus,
     addOption,
     removeOption,
@@ -28,9 +28,14 @@ export const useEditorStore = defineStore("editor", {
       this.currentComponentIndex = -1;
       if (isSurveyComName(newCom.name)) this.surveyCount++;
     },
-     setCurrentComponentIndex(index: number) {
+    setCurrentComponentIndex(index: number) {
       this.currentComponentIndex = index;
-    },
+    }, removeCom(index: number) {
+      if (isSurveyComName(this.coms[index].name)) {
+        this.surveyCount--;
+      }
+      this.coms = [...this.coms.slice(0, index), ...this.coms.slice(index + 1)];
     }
-  },
+  }
+},
 )
