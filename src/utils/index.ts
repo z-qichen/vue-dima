@@ -1,7 +1,18 @@
 // 工具库
-import type { TextProps, OptionsProps, TypeStatus, Status, Material } from '@/types';
+import type {
+  TextProps,
+  OptionsProps,
+  TypeStatus,
+  Status,
+  Material,
+  SurveyDBData,
+  EditComName,
+  BaseStatus,
+} from '@/types';
 import { isStringArray, isPicTitleDescStatusArr, IsOptionsStatus } from '@/types';
 import { genderStatus, educationStatus } from '@/configs/defaultStatus/initStatus';
+import type { TableColumnCtx } from 'element-plus';
+import { componentMap } from '@/configs/componentMap';
 
 export function getTextStatus(props: TextProps) {
   return props.status;
@@ -50,14 +61,45 @@ export function updateInitStatusBeforeAdd(comStatus: Status, newMaterialName: Ma
     case 'personal-info-gender': {
       comStatus.name = 'personal-info-gender';
       comStatus.status.title.status = '您的性别是？';
-      if (IsOptionsStatus(comStatus.status)) comStatus.status.options.status = genderStatus();
+      if (IsOptionsStatus(comStatus.status as unknown as BaseStatus))
+        comStatus.status.options.status = genderStatus();
       break;
     }
     case 'personal-info-education': {
       comStatus.name = 'personal-info-education';
       comStatus.status.title.status = '到目前为止，您的最高学历是？';
-      if (IsOptionsStatus(comStatus.status)) comStatus.status.options.status = educationStatus();
+      if (IsOptionsStatus(comStatus.status as unknown as BaseStatus))
+        comStatus.status.options.status = educationStatus();
       break;
     }
   }
 }
+
+// 处理日期格式的辅助方法
+export function formatDate(
+  row: SurveyDBData,
+  column: TableColumnCtx<SurveyDBData>,
+  cellValue: number,
+) {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  };
+  return new Intl.DateTimeFormat('zh-CN', options).format(new Date(cellValue));
+}
+
+export const restoreComponentStatus = (coms: Status[]) => {
+  coms.forEach((com) => {
+    // 业务组件的还原
+    com.type = componentMap[com.name]; // 这一步就做了组件的还原
+    // 接下来还原编辑组件
+    for (const key in com.status) {
+      const name = com.status[key].name as EditComName;
+      com.status[key].editCom = componentMap[name];
+    }
+  });
+};

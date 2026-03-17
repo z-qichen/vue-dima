@@ -1,4 +1,4 @@
-import type { TextProps, OptionsProps, PicLink, Status } from '@/types';
+import type { TextProps, OptionsProps, PicLink, Status, VueComType } from '@/types';
 // 题目类型
 export type SurveyComName =
   | 'single-select'
@@ -8,6 +8,25 @@ export type SurveyComName =
 
 // 业务组件类型(题目类型 + 非题目类型)
 export type Material = SurveyComName | 'text-note';
+
+// 编辑组件类型:集合了所有的编辑组件
+export type EditComName =
+  | 'title-editor'
+  | 'desc-editor'
+  | 'position-editor'
+  | 'size-editor'
+  | 'weight-editor'
+  | 'italic-editor'
+  | 'text-type-editor'
+  | 'pic-options-editor'
+  | 'options-editor';
+
+// 所有的组件类型：业务组件类型 + 编辑组件类型
+export type ComponentName = Material | EditComName;
+
+export type ComponentMap = {
+  [key in ComponentName]: VueComType;
+};
 
 export interface Actions {
   setTextStatus: (textProps: TextProps, text: string) => void;
@@ -25,18 +44,15 @@ export interface MaterialStore extends Actions {
   setCurrentSurveyCom: (com: Material) => void;
 }
 
-export type  surveyComsArr = [
+// 记录题目类型的数组
+export const SurveyComNameArr = [
   'single-select',
-   'single-pic-select',
+  'single-pic-select',
   'personal-info-gender',
-  'personal-info-education'
-]
-export function isSurveyComName(name: string): name is SurveyComName {
-  const surveyComs: surveyComsArr = [
-    'single-select',
-    'single-pic-select',
-    'personal-info-gender',
-    'personal-info-education',
-  ];
-  return surveyComs.includes(name as SurveyComName);
+  'personal-info-education',
+];
+
+// 判断传入的值是否为题目类型
+export function isSurveyComName(value: string): value is SurveyComName {
+  return SurveyComNameArr.includes(value as SurveyComName);
 }

@@ -1,27 +1,30 @@
 <template>
   <div class="right-side-container">
-    <div v-if="store.currentComponentIndex === -1">
-      <!-- Content for the selected component -->
-      请选择组件
+    <div
+      v-if="store.currentComponentIndex === -1"
+      class="content flex justify-content-center align-items-center"
+    >
+      点击题型进行编辑
     </div>
     <div v-else>
-      <!-- Content for the selected component -->
-      <EditPannel :com="currentCom"></EditPannel>
+      <EditPannel :com="currentCom" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useEditorStore } from '@/stores/useEditor';
-import type { Status } from '@/types';
-import EditPannel from '@/components/SurveyComs/EditItems/EditPannel.vue';
 import { computed, provide } from 'vue';
+// 仓库
+import { useEditorStore } from '@/stores/useEditor';
+const store = useEditorStore();
+import EditPannel from '@/components/SurveyComs/EditItems/EditPannel.vue';
+
 import { ElMessage } from 'element-plus';
 import type { PicLink } from '@/types';
 import { isPicLink, IsTypeStatus, IsOptionsStatus } from '@/types';
 import { changeEditorIsShowStatus } from '@/utils';
-const store = useEditorStore();
-const currentCom = computed(() => store.coms[store.currentComponentIndex] as Status);
+
+const currentCom = computed(() => store.coms[store.currentComponentIndex]);
 
 const updateStatus = (configKey: string, payload?: number | string | boolean | PicLink) => {
   // 拿到新的状态数据之后，就应该去修改仓库里面的数据
@@ -99,7 +102,6 @@ provide('getLink', getLink);
   border-radius: var(--border-radius-md);
   overflow-y: scroll;
 }
-
 .content {
   height: 100%;
 }

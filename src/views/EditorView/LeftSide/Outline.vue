@@ -2,9 +2,14 @@
   <div v-if="store.surveyCount">
     <draggable v-model="store.coms" item-key="index" @start="dragstart">
       <template #item="{ element, index }">
-        <div class="mb-10" v-show="isSurveyComName(element.name)" @click="clickHandle(index)" :class="{
-          active: store.currentComponentIndex === index,
-        }">
+        <div
+          class="mb-10"
+          v-show="isSurveyComName(element.name)"
+          @click="clickHandle(index)"
+          :class="{
+            active: store.currentComponentIndex === index,
+          }"
+        >
           <div class="item">
             {{ serialNum[index] }}.
             {{
@@ -31,9 +36,9 @@ import EventBus from '@/utils/eventBus';
 import { useEditorStore } from '@/stores/useEditor';
 const store = useEditorStore();
 // 组合式函数
-import { useIsSurveyCom } from '@/utils/hooks';
+import { useSurveyNo } from '@/utils/hooks';
 // 获取题目编号
-const serialNum = computed(() => useIsSurveyCom(store.coms).value);
+const serialNum = computed(() => useSurveyNo(store.coms).value);
 
 const dragstart = () => {
   store.setCurrentComponentIndex(-1);
@@ -57,11 +62,9 @@ const clickHandle = (index: number) => {
   padding: 10px;
   cursor: pointer;
 }
-
 .tip {
   height: calc(100% - 50px);
 }
-
 .active {
   transform: scale(1.04);
   transition: 0.5s;

@@ -2,13 +2,26 @@
   <div ref="centerContainer" class="center-container">
     <draggable v-model="store.coms" item-key="index" @start="dragstart">
       <template #item="{ element, index }">
-        <div class="content mb-10 relative" :class="{
-          active: store.currentComponentIndex === index,
-        }" @click="clickHandle(index)" :key="element.id" :ref="(el) => (componentsRefs[index] = el)">
+        <div
+          class="content mb-10 relative"
+          :class="{
+            active: store.currentComponentIndex === index,
+          }"
+          @click="clickHandle(index)"
+          :key="element.id"
+          :ref="(el) => (componentsRefs[index] = el)"
+        >
           <component :is="element.type" :status="element.status" :serialNum="serialNum[index]" />
           <!-- 删除按钮 -->
           <div class="absolute delete-btn" v-show="store.currentComponentIndex === index">
-            <el-button type="danger" class="ml-10" size="small" :icon="Close" circle @click.stop="removeCom(index)" />
+            <el-button
+              type="danger"
+              class="ml-10"
+              size="small"
+              :icon="Close"
+              circle
+              @click.stop="removeCom(index)"
+            />
           </div>
         </div>
       </template>
@@ -27,10 +40,10 @@ const store = useEditorStore();
 // 事件总监
 import EventBus from '@/utils/eventBus';
 // 组合式函数
-import { useIsSurveyCom } from '@/utils/hooks';
+import { useSurveyNo } from '@/utils/hooks';
 
 // 获取题目编号
-const serialNum = computed(() => useIsSurveyCom(store.coms).value);
+const serialNum = computed(() => useSurveyNo(store.coms).value);
 
 const centerContainer = ref<HTMLElement | null>(null);
 const componentsRefs = ref<(Element | ComponentPublicInstance | null)[]>([]);
@@ -101,13 +114,11 @@ const removeCom = (index: number) => {
   padding: 20px;
   background: var(--white);
   position: relative;
-
   .content {
     cursor: pointer;
     padding: 10px;
     background-color: var(--white);
     border-radius: var(--border-radius-sm);
-
     &:hover {
       transform: scale(1.01);
       transition: 0.5s;
@@ -115,13 +126,11 @@ const removeCom = (index: number) => {
     }
   }
 }
-
 .active {
   transform: scale(1.01);
   transition: 0.5s;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
 .delete-btn {
   right: -5px;
   top: -10px;

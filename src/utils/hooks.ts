@@ -1,19 +1,17 @@
 import { computed } from 'vue';
-import { isSurveyComName } from '@/types';
 import type { Status } from '@/types';
-
-// 这个函数用来判断当前选中的组件是否是问卷题目组件
-
-export function useIsSurveyCom(currentCom: Status[]) {
+import { isSurveyComName } from '@/types';
+// 返回问卷题目序号的数组
+export function useSurveyNo(coms: Status[]) {
   return computed(() => {
     let questionNumber = 1;
-    return currentCom.map((com) => {
+    return coms.map((com) => {
       // 需要判断当前这个组件是不是问卷题目
       if (isSurveyComName(com.name)) {
         return questionNumber++;
       }
       return null;
     });
-  }
-  )
+  });
 }
+// 最终形成的数组示例：[1, 2, null, 3, 4, null, 5]

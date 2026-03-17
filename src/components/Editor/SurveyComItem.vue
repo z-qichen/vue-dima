@@ -2,7 +2,8 @@
   <div>
     <div
       class="survey-com-item-container pointer flex justify-content-center align-items-center self-center pl-10 pr-10 mb-10"
-      @click="addSurveyCom">
+      @click="addSurveyCom"
+    >
       {{ item.comName }}
     </div>
   </div>
@@ -30,7 +31,6 @@ const addSurveyCom = () => {
   // 每次添加了新的组件，都要滚动到底部
   EventBus.emit('scrollToBottom');
 };
-
 </script>
 
 <style scoped lang="scss">
@@ -43,7 +43,6 @@ const addSurveyCom = () => {
   color: var(--font-color-light);
   user-select: none;
 }
-
 .survey-com-item-container:hover {
   background-color: var(--font-color-lightest);
 }

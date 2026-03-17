@@ -25,7 +25,6 @@ defineProps(['title', 'icon', 'list']);
 .survey-com-group-container {
   width: 90%;
 }
-
 .title {
   font-size: var(--font-size-base);
   position: relative;

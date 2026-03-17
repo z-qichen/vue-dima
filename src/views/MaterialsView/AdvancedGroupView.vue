@@ -1,12 +1,7 @@
 <template>
-  <Layout>
-    <Router-link to="" class="link-item mb-15">评价/打分</Router-link>
-    <Router-link to="" class="link-item mb-15">日期/时间</Router-link>
-  </Layout>
+  <div>高级题目这一组视图</div>
 </template>
 
-<script setup lang="ts">
-import Layout from './Layout.vue';
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>

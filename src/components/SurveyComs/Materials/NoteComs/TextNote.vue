@@ -34,7 +34,6 @@ import { computed } from 'vue';
 import type { TypeStatus } from '@/types';
 import { getTextStatus, getCurrentStatus, getStringStatusByCurrentStatus } from '@/utils';
 const props = defineProps<{
-  serialNum: number;
   status: TypeStatus;
 }>();
 const computedState = computed(() => ({
