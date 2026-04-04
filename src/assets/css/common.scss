@@ -1,27 +1,19 @@
-// 公共类
-// font-weight-100 ～ 900
 @for $i from 1 through 9 {
   .font-weight-#{$i}00 {
     font-weight: #{$i}00;
   }
 }
 
-// margin
-// 4个方向 1、2、3、4、5、6、7、8、9、10、15、20、25、30、35、40、45、50
-// .mt-1 { margin-top: 1px; } .mr-20 {margin-right:20px}
 @each $direction, $property in (t: top, b: bottom, l: left, r: right) {
-  @each $size in 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50 {
+  @each $size in 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40 {
     .m#{$direction}-#{$size} {
       margin-#{$property}: #{$size}px;
     }
   }
 }
 
-// padding
-// 4个方向 1、2、3、4、5、6、7、8、9、10、15、20、25、30、35、40、45、50
-// .pt-1 { padding-top: 1px; } .pr-20 {padding-right:20px}
 @each $direction, $property in (t: top, b: bottom, l: left, r: right) {
-  @each $size in 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50 {
+  @each $size in 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40 {
     .p#{$direction}-#{$size} {
       padding-#{$property}: #{$size}px;
     }

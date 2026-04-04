@@ -1,10 +1,10 @@
 <template>
   <div key="id">
     <div class="flex align-items-center mb-10">
-      <div class="mr-10">选项</div>
-      <el-button size="small" circle :icon="Plus" @click="addOptionHandle" />
+      <div class="mr-10">题目选项</div>
+      <el-button size="small" :icon="Plus" circle @click="addOptionHandle" />
     </div>
-    <div v-for="(item, index) in status" :key="index" class="flex align-items-center">
+    <div v-for="(_, index) in status" :key="index" class="flex align-items-center">
       <el-input placeholder="选项" class="mt-5 mb-5" v-model="textArr[index]" />
       <el-button
         type="danger"
@@ -19,30 +19,35 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject } from 'vue';
-import { Plus, Minus } from '@element-plus/icons-vue';
-import type { VueComType, UpdateStatus } from '@/types';
+import { Plus, Minus } from '@element-plus/icons-vue'
+import type { VueComType, StringStatusArr } from '@/types'
+import { inject, ref } from 'vue'
 const props = defineProps<{
-  status: string[];
-  isShow: boolean;
-  configKey: string;
-  editCom: VueComType;
-  id: string;
-}>();
+  currentStatus: number
+  status: StringStatusArr
+  isShow: boolean
+  configKey: string
+  editCom: VueComType
+  id: string
+}>()
+// 定义类型
+import type { UpdateStatus } from '@/types'
 
-const textArr = ref(props.status);
-const updateStatus = inject<UpdateStatus>('updateStatus');
-const addOptionHandle = () => {
-  if (updateStatus) {
-    updateStatus(props.configKey);
-  }
-};
+// 注入 updateStatus
+const updateStatus = inject<UpdateStatus>('updateStatus')
 
-const removeOption = (index: number) => {
+const textArr = ref(props.status)
+
+function addOptionHandle() {
   if (updateStatus) {
-    updateStatus(props.configKey, index);
+    updateStatus(props.configKey)
   }
-};
+}
+function removeOption(index: number) {
+  if (updateStatus) {
+    updateStatus(props.configKey, index)
+  }
+}
 </script>
 
 <style scoped></style>

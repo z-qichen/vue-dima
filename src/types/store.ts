@@ -1,58 +1,78 @@
-import type { TextProps, OptionsProps, PicLink, Status, VueComType } from '@/types';
-// 题目类型
-export type SurveyComName =
-  | 'single-select'
-  | 'single-pic-select'
-  | 'personal-info-gender'
-  | 'personal-info-education';
+import type { TextProps, OptionsProps, Status, Material, SurveyDBData } from '@/types'
 
-// 业务组件类型(题目类型 + 非题目类型)
-export type Material = SurveyComName | 'text-note';
+// 定义 updateStatus 的类型
+export type UpdateStatus = (
+  configKey: string,
+  payload?: number | string | boolean | object,
+  isShowChange?: boolean,
+) => void
+export type PicLink = { link: string; index: number }
+export type GetLink = (obj: PicLink) => void
 
-// 编辑组件类型:集合了所有的编辑组件
-export type EditComName =
-  | 'title-editor'
-  | 'desc-editor'
-  | 'position-editor'
-  | 'size-editor'
-  | 'weight-editor'
-  | 'italic-editor'
-  | 'text-type-editor'
-  | 'pic-options-editor'
-  | 'options-editor';
+export type optionsStatusByIndexPayload = {
+  val: string
+  index: number
+}
 
-// 所有的组件类型：业务组件类型 + 编辑组件类型
-export type ComponentName = Material | EditComName;
+export function isOptionsStatusByIndexPayload(obj: object): obj is optionsStatusByIndexPayload {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    'val' in obj &&
+    typeof (obj as optionsStatusByIndexPayload).val === 'string' &&
+    'index' in obj &&
+    typeof (obj as optionsStatusByIndexPayload).index === 'number'
+  )
+}
 
-export type ComponentMap = {
-  [key in ComponentName]: VueComType;
-};
+export function isPicLink(obj: object): obj is PicLink {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    'link' in obj &&
+    typeof (obj as PicLink).link === 'string' &&
+    'index' in obj &&
+    typeof (obj as PicLink).index === 'number'
+  )
+}
 
 export interface Actions {
-  setTextStatus: (textProps: TextProps, text: string) => void;
-  addOption: (optionProps: OptionsProps) => void;
-  removeOption: (optionProps: OptionsProps, index: number) => number;
-  setPosition: (optionProps: OptionsProps, index: number) => void;
-  setCurrentStatus: (optionProps: OptionsProps, index: number) => void;
-  setPicLinkByIndex: (optionProps: OptionsProps, payload: PicLink) => void;
+  addOption: (optionProps: OptionsProps) => void
+  removeOption: (optionProps: OptionsProps, index: number) => boolean
+  setPosition: (positionProps: OptionsProps, index: number) => void
+  setSize: (sizeProps: OptionsProps, index: number) => void
+  setWeight: (weightProps: OptionsProps, index: number) => void
+  setItalic: (italicProps: OptionsProps, index: number) => void
+  setColor: (colorProps: TextProps, color: string) => void
+  setTextType: (typeProps: OptionsProps, index: number) => void
+  setTextStatus: (textProps: TextProps, text: string) => void
+  setUse: (optionsProps: OptionsProps, isUse: boolean) => void
+  setOptionsStatusByIndex: (
+    optionsProps: OptionsProps,
+    payload: optionsStatusByIndexPayload,
+  ) => void
+  setPicLinkByIndex: (optionsProps: OptionsProps, payload: PicLink) => void
 }
 
-// 仓库状态
 export interface MaterialStore extends Actions {
-  currentMaterialCom: Material;
-  coms: Record<Material, Status>;
-  setCurrentSurveyCom: (com: Material) => void;
+  currentMaterialCom: Material
+  coms: Record<Material, Status>
+  setCurrentSurveyCom: (com: Material) => void
 }
 
-// 记录题目类型的数组
-export const SurveyComNameArr = [
-  'single-select',
-  'single-pic-select',
-  'personal-info-gender',
-  'personal-info-education',
-];
+export interface EditorStore extends Actions {
+  currentComponentIndex: number
+  surveyCount: number
+  coms: Status[]
+  setCurrentComponentIndex: (index: number) => void
+  addCom: (coms: Status[], newCom: Status) => void
+  setStore: (storeStatus: SurveyDBData) => void
+  initStore: () => void
+  removeCom: (index: number) => void
+  resetComs: () => void
+}
 
-// 判断传入的值是否为题目类型
-export function isSurveyComName(value: string): value is SurveyComName {
-  return SurveyComNameArr.includes(value as SurveyComName);
+export type QuizData = {
+  surveyCount: number
+  coms: Status[]
 }

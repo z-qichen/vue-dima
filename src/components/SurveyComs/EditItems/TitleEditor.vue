@@ -6,22 +6,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject } from 'vue';
-import type { VueComType, UpdateStatus } from '@/types';
+import type { VueComType } from '@/types'
+import { inject, ref } from 'vue'
+
+// 定义 props
 const props = defineProps<{
-  status: string;
-  isShow: boolean;
-  configKey: string;
-  editCom: VueComType;
-  id: string;
-}>();
+  status: string
+  isShow: boolean
+  configKey: string
+  editCom: VueComType
+  id: string
+}>()
 
-const text = ref(props.status);
-const updateStatus = inject<UpdateStatus>('updateStatus');
+// 定义类型
+import type { UpdateStatus } from '@/types'
 
+// 注入 updateStatus
+const updateStatus = inject<UpdateStatus>('updateStatus')
+
+// 定义响应式变量
+const text = ref(props.status)
+
+// 监听输入事件并更新状态
 function inputHandle(newVal: string) {
+  text.value = newVal // 更新绑定的值
   if (updateStatus) {
-    updateStatus(props.configKey, newVal);
+    updateStatus(props.configKey, newVal)
+  } else {
+    console.error('updateStatus is not defined.')
   }
 }
 </script>

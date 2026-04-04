@@ -2,35 +2,38 @@
   <div>
     <div
       class="survey-com-item-container pointer flex justify-content-center align-items-center self-center pl-10 pr-10 mb-10"
-      @click="addSurveyCom"
+      @click="addSurveyComItem"
     >
-      {{ item.comName }}
+      <div>{{ item?.comName }}</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defaultStatusMap } from '@/configs/defaultStatus/defaultStatusMap';
-import { updateInitStatusBeforeAdd } from '@/utils';
-import type { Material, Status } from '@/types';
-import { useEditorStore } from '@/stores/useEditor';
-const store = useEditorStore();
-// 事件总线
-import EventBus from '@/utils/eventBus';
+// EventBus
+import EventBus from '@/utils/eventBus'
+import type { PropType } from 'vue'
+import type { MaterialItem } from '@/types'
+import { defaultStatusMap } from '@/configs/defaultStatus/defaultStatusMap'
+// 仓库
+import { useEditorStore } from '@/stores/useEditor'
+const store = useEditorStore()
+import { updateInitStatusBeforeAdd } from '@/utils'
+const props = defineProps({
+  item: Object as PropType<MaterialItem>,
+})
 
-const props = defineProps(['item']);
-const addSurveyCom = () => {
-  const newSurveyComName = props.item.materialName as Material;
-  if (!newSurveyComName) {
-    console.warn('请先选择题型');
-    return;
+const addSurveyComItem = () => {
+  const newMaterialName = props.item?.materialName
+  if (!newMaterialName) {
+    console.warn('newMaterialName is required')
+    return
   }
-  const newSurveyComStatus = defaultStatusMap[newSurveyComName]() as Status;
-  updateInitStatusBeforeAdd(newSurveyComStatus, newSurveyComName);
-  store.addCom(newSurveyComStatus);
-  // 每次添加了新的组件，都要滚动到底部
-  EventBus.emit('scrollToBottom');
-};
+  const status = defaultStatusMap[newMaterialName]()
+  updateInitStatusBeforeAdd(status, newMaterialName)
+  store.addCom(store.coms, status)
+  EventBus.emit('scrollToBottom')
+}
 </script>
 
 <style scoped lang="scss">

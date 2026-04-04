@@ -1,31 +1,29 @@
 <template>
   <Layout>
-    <Router-link class="link-item mb-15" exact-active-class="link-item-active" to="/single-select"
-      >单选题</Router-link
+    <Router-Link to="/single-select" class="link-item mb-15" exact-active-class="link-item-active"
+      >单选题</Router-Link
     >
-    <Router-link class="link-item mb-15" exact-active-class="link-item-active" to="/multi-select"
-      >多选题</Router-link
+    <Router-Link to="/multi-select" class="link-item mb-15" exact-active-class="link-item-active"
+      >多选题</Router-Link
     >
-    <Router-link class="link-item mb-15" exact-active-class="link-item-active" to="/option-select"
-      >下拉选择</Router-link
+    <Router-Link to="/option-select" class="link-item mb-15" exact-active-class="link-item-active"
+      >下拉选择题</Router-Link
     >
-    <Router-link
-      class="link-item mb-15"
-      exact-active-class="link-item-active"
+    <Router-Link
       to="/single-pic-select"
-      >图片单选题</Router-link
-    >
-    <Router-link
       class="link-item mb-15"
       exact-active-class="link-item-active"
+      >图片单选题</Router-Link
+    >
+    <Router-Link
       to="/multi-pic-select"
-      >图片多选题</Router-link
+      class="link-item mb-15"
+      exact-active-class="link-item-active"
+      >图片多选题</Router-Link
     >
   </Layout>
 </template>
 
 <script setup lang="ts">
-import Layout from './Layout.vue';
+import Layout from './Layout.vue'
 </script>
-
-<style scoped></style>

@@ -1,7 +1,6 @@
 <template>
   <div @click.stop>
     <div class="container mb-10">
-      <!-- 添加图片 -->
       <div class="top flex justify-content-center align-items-center">
         <el-upload
           class="avatar-uploader"
@@ -18,7 +17,6 @@
           </div>
         </el-upload>
       </div>
-      <!-- 图片标题和描述 -->
       <div
         class="bottom flex justify-content-center align-items-center flex-direction-column font-weight-500"
       >
@@ -30,71 +28,67 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject, watch } from 'vue';
-import { Upload } from '@element-plus/icons-vue';
-import { ElMessage } from 'element-plus';
-import type { UploadProps } from 'element-plus';
-import type { GetLink } from '@/types';
+import { ref, inject, watch } from 'vue'
+import { ElMessage } from 'element-plus'
+import { Upload } from '@element-plus/icons-vue'
+import type { UploadProps } from 'element-plus'
+import type { GetLink } from '@/types'
 const props = defineProps({
   picTitle: {
     type: String,
-    default: '',
+    default: '选项',
   },
   picDesc: {
     type: String,
-    default: '',
+    default: '说明（选填，限24字）',
   },
   value: {
     type: String,
-    default: '',
+    default: null,
   },
   index: {
     type: Number,
     default: 0,
   },
-});
-const getLink = inject<GetLink>('getLink', () => {});
-const imageUrl = ref('');
+})
+const imageUrl = ref('')
+// 预览的时候不会有注入，所以需要设置默认值
+const getPicLink = inject<GetLink>('getPicLink', () => {})
 
 watch(
   () => props.value,
   async (newVal) => {
     if (newVal) {
-      // 说明value里面是有链接的，发送服务器请求获取图片
-      const response = await fetch(newVal);
-      const blob = await response.blob();
-      // 使用 blob 来创建 File 对象
-      const file = new File([blob], 'image.jpg', { type: blob.type });
-      imageUrl.value = URL.createObjectURL(file);
+      const response = await fetch(newVal)
+      const blob = await response.blob()
+      // 使用 Blob 创建 File 对象
+      const file = new File([blob], 'filename.jpg', { type: blob.type })
+      imageUrl.value = URL.createObjectURL(file)
     } else {
-      imageUrl.value = '';
+      imageUrl.value = ''
     }
   },
-  {
-    immediate: true,
-  },
-);
+  { immediate: true },
+)
 
-// 上传成功的回调
 const handleAvatarSuccess: UploadProps['onSuccess'] = async (response) => {
-  if (getLink) {
-    getLink({
+  if (getPicLink)
+    getPicLink({
       index: props.index,
       link: response.imageUrl,
-    });
-  }
-};
-// 上传之前的回调
+    })
+}
+
 const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
   if (rawFile.size / 1024 / 1024 > 2) {
-    ElMessage.error('图片大小不要超过2MB!');
-    return false;
+    ElMessage.error('上传图片不能超过2MB!')
+    return false
   }
-  return true;
-};
+  return true
+}
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .container {
   width: 200px;
   height: 300px;

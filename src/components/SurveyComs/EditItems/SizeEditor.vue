@@ -1,14 +1,14 @@
 <template>
   <ButtonGroup
     :title="`${configKey === 'titleSize' ? '标题' : '描述'}尺寸`"
-    :status="`${status[currentStatus]}px`"
+    :status="status[currentStatus]"
   >
     <el-button-group>
       <el-button
         :class="{
           select: currentStatus === 0,
         }"
-        @click="changeSize(0)"
+        @click="changeFontSize(0)"
       >
         <font-awesome-icon icon="font" size="lg" />
       </el-button>
@@ -16,7 +16,7 @@
         :class="{
           select: currentStatus === 1,
         }"
-        @click="changeSize(1)"
+        @click="changeFontSize(1)"
       >
         <font-awesome-icon icon="font" size="sm" />
       </el-button>
@@ -24,7 +24,7 @@
         :class="{
           select: currentStatus === 2,
         }"
-        @click="changeSize(2)"
+        @click="changeFontSize(2)"
       >
         <font-awesome-icon icon="font" size="xs" />
       </el-button>
@@ -33,20 +33,22 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from 'vue';
-import ButtonGroup from './ButtonGroup.vue';
-import type { VueComType, UpdateStatus } from '@/types';
+import type { VueComType, UpdateStatus } from '@/types'
+import { inject } from 'vue'
+import ButtonGroup from './ButtonGroup.vue'
+const updateStatus = inject<UpdateStatus>('updateStatus')
 const props = defineProps<{
-  currentStatus: number;
-  status: string[];
-  isShow: boolean;
-  configKey: string;
-  editCom: VueComType;
-}>();
-const updateStatus = inject<UpdateStatus>('updateStatus');
-const changeSize = (size: number) => {
-  if (updateStatus) updateStatus(props.configKey, size);
-};
+  currentStatus: number
+  status: string[]
+  isShow: boolean
+  configKey: string
+  editCom: VueComType
+}>()
+function changeFontSize(pos: number) {
+  if (updateStatus) {
+    updateStatus(props.configKey, pos)
+  } else {
+    console.warn('updateStatus is not provided')
+  }
+}
 </script>
-
-<style scoped></style>

@@ -3,71 +3,58 @@
   <div>
     <h1 class="font-weight-100 text-center m0 p0">组件市场</h1>
     <div class="container mc flex">
-      <!-- 导航 -->
       <nav class="category mc">
-        <Router-link class="category-item" to="/select-group">
+        <Router-Link to="/select-group" class="category-item">
           <el-icon>
             <CircleCheck />
           </el-icon>
           <div>选择</div>
-        </Router-link>
-        <Router-link class="category-item" to="/input-group">
+        </Router-Link>
+        <Router-Link to="/input-group" class="category-item">
           <el-icon>
             <EditPen />
           </el-icon>
           <div>文本输入</div>
-        </Router-link>
-        <Router-link class="category-item" to="/advanced-group">
+        </Router-Link>
+        <Router-Link to="/advanced-group" class="category-item">
           <el-icon>
             <Files />
           </el-icon>
-          <div>高级题型</div></Router-link
-        >
-        <Router-link class="category-item" to="/note-group">
+          <div>高级题型</div>
+        </Router-Link>
+        <Router-Link to="/note-group" class="category-item">
           <el-icon>
             <ChatLineSquare />
           </el-icon>
-          <div>备注说明</div></Router-link
-        >
-        <Router-link class="category-item" to="/personal-info-group">
+          <div>备注说明</div>
+        </Router-Link>
+        <Router-Link to="/personal-info-group" class="category-item">
           <el-icon>
             <User />
           </el-icon>
-          <div>个人信息</div></Router-link
-        >
-        <Router-link class="category-item" to="/contact-group">
+          <div>个人信息</div>
+        </Router-Link>
+        <Router-Link to="/contact-group" class="category-item">
           <el-icon>
             <Message />
           </el-icon>
-          <div>联系方式</div></Router-link
-        >
+          <div>联系方式</div>
+        </Router-Link>
       </nav>
-      <!-- 路由出口 -->
       <div class="coms">
-        <RouterView />
+        <Router-view />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import Header from '@/components/Common/Header.vue';
+import Header from '@/components/Common/Header.vue'
 // 引入对应图标
-import {
-  CircleCheck,
-  Files,
-  EditPen,
-  ChatLineSquare,
-  User,
-  Message,
-} from '@element-plus/icons-vue';
+import { CircleCheck, Files, EditPen, ChatLineSquare, User, Message } from '@element-plus/icons-vue'
 </script>
 
 <style scoped lang="scss">
-h1 {
-  height: 50px;
-  margin: 20px 0;
-}
 .container {
   width: 1180px;
   height: 600px;
@@ -90,22 +77,35 @@ h1 {
     border-top-left-radius: var(--border-radius-lg);
     border-bottom-left-radius: var(--border-radius-lg);
   }
-  @for $i from 1 through 4 {
-    .category-item:nth-child(4n + #{$i}) {
-      @if $i == 1 {
-        background-color: var(--primary-color);
-      } @else if $i == 2 {
-        background-color: var(--success-color);
-      } @else if $i == 3 {
-        background-color: var(--warning-color);
-      } @else if $i == 4 {
-        background-color: var(--error-color);
-      }
+}
+@for $i from 1 through 4 {
+  .category-item:nth-child(4n + #{$i}) {
+    @if $i == 1 {
+      background-color: var(--primary-color);
+    } @else if $i == 2 {
+      background-color: var(--success-color);
+    } @else if $i == 3 {
+      background-color: var(--warning-color);
+    } @else if $i == 4 {
+      background-color: var(--error-color);
     }
   }
 }
 .coms {
   width: calc(1180px - 60px);
   height: 100%;
+}
+
+h1 {
+  height: 50px;
+  margin: 20px 0;
+}
+
+.custom-tabs-label .el-icon {
+  vertical-align: middle;
+}
+.custom-tabs-label span {
+  vertical-align: middle;
+  margin-left: 5px;
 }
 </style>

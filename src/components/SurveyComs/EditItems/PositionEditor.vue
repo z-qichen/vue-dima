@@ -22,22 +22,22 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from 'vue';
-import ButtonGroup from './ButtonGroup.vue';
-import type { VueComType, UpdateStatus } from '@/types';
+import type { VueComType, UpdateStatus } from '@/types'
+import { inject } from 'vue'
+import ButtonGroup from './ButtonGroup.vue'
+const updateStatus = inject<UpdateStatus>('updateStatus')
 const props = defineProps<{
-  currentStatus: number;
-  status: string[];
-  isShow: boolean;
-  configKey: string;
-  editCom: VueComType;
-}>();
-const updateStatus = inject<UpdateStatus>('updateStatus');
-const changePosition = (pos: number) => {
+  currentStatus: number
+  status: string[]
+  isShow: boolean
+  configKey: string
+  editCom: VueComType
+}>()
+function changePosition(pos: number) {
   if (updateStatus) {
-    updateStatus(props.configKey, pos);
+    updateStatus(props.configKey, pos)
+  } else {
+    console.warn('updateStatus is not provided')
   }
-};
+}
 </script>
-
-<style scoped></style>

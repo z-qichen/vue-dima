@@ -1,29 +1,29 @@
-// 该文件提供具体的数据库操作方法的支持
+import { db } from './db'
+import type { SurveyDBData } from '@/types'
 
-import { db } from './db';
-import type { SurveyDBData } from '@/types';
-
-// 保存数据
-export async function saveSurvey(data: SurveyDBData) {
-  return await db.surveys.add(data);
+// 添加数据
+export async function saveSurvey(survey: SurveyDBData) {
+  return await db.surveys.add(survey)
 }
 
-// 查询所有数据
-export async function getAllSurvey() {
-  return await db.surveys.toArray();
+// 查询数据
+export async function getSurveys() {
+  const allSurveys = await db.surveys.toArray()
+  return allSurveys
 }
 
-// 根据 id 查询某一条数据
+// 获取单个数据
 export async function getSurveyById(id: number) {
-  return await db.surveys.get(id);
+  const survey = await db.surveys.get(id)
+  return survey
 }
 
-// 根据 id 删除某一条数据
-export async function deleteSurveyById(id: number) {
-  return await db.surveys.delete(id);
+// 更新数据
+export async function updateSurvey(id: number, updatedSurvey: Partial<SurveyDBData>) {
+  await db.surveys.update(id, updatedSurvey)
 }
 
-// 根据 id 更新某一条数据
-export async function updateSurveyById(id: number, data: Partial<SurveyDBData>) {
-  return await db.surveys.update(id, data);
+// 删除数据
+export async function deleteSurvey(id: number) {
+  return await db.surveys.delete(id)
 }
