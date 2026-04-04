@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container">
-      <h1 class="font-weight-100 text-center">渡一问卷系统</h1>
+      <h1 class="font-weight-100 text-center">启承问卷系统</h1>
       <div class="mb-15">
         <el-button type="primary" :icon="Plus" @click="goToEditor">创建问卷</el-button>
         <el-button type="success" :icon="Compass" @click="goToComMarket">组件市场</el-button>
