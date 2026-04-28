@@ -30,6 +30,14 @@ import SizeEditor from '@/components/SurveyComs/EditItems/SizeEditor.vue'
 import WeightEditor from '@/components/SurveyComs/EditItems/WeightEditor.vue'
 import ItalicEditor from '@/components/SurveyComs/EditItems/ItalicEditor.vue'
 import ColorEditor from '@/components/SurveyComs/EditItems/ColorEditor.vue'
+// 历史记录
+import { HistoryManager, DebounceMerger } from './history'
+import {
+  createAddCommand,
+  createRemoveCommand,
+  createUpdateCommand,
+  createMoveCommand,
+} from './commands'
 
 const initStore = () =>
   [
@@ -230,16 +238,176 @@ const initStore = () =>
 
 export const useEditorStore = defineStore('editor', {
   state: () => ({
-    currentComponentIndex: -1, // 一开始没有选中的组件
-    surveyCount: 0, // 用于对问题进行计数
-    // 每个业务组件的状态，一开始有两个默认的业务组件
+    currentComponentIndex: -1,
+    surveyCount: 0,
     coms: initStore(),
+    // 历史记录
+    history: new HistoryManager(),
+    debounceMerger: new DebounceMerger(),
+    // 用于合并的暂存值
+    pendingOldValue: null as unknown,
   }),
+  getters: {
+    canUndo: (state) => state.history.canUndo,
+    canRedo: (state) => state.history.canRedo,
+  },
   actions: {
     setCurrentComponentIndex(index: number) {
       this.currentComponentIndex = index
     },
-    // 新增一个业务组件
+    // 新增一个业务组件（带历史记录）
+    addCom(coms: Status[], newCom: Status) {
+      const command = createAddCommand(
+        coms,
+        newCom,
+        (c, n) => {
+          c.push(n)
+          this.currentComponentIndex = -1
+          if (isSurveyComName(n.name)) {
+            this.surveyCount++
+          }
+        },
+        (idx) => {
+          const com = this.coms[idx]
+          if (com && isSurveyComName(com.name)) {
+            this.surveyCount--
+          }
+          this.coms.splice(idx, 1)
+        },
+      )
+      this.history.execute(command)
+    },
+    // 删除组件（带历史记录）
+    removeCom(index: number): void {
+      const command = createRemoveCommand(
+        this.coms,
+        index,
+        (idx) => {
+          const com = this.coms[idx]
+          if (com && isSurveyComName(com.name)) {
+            this.surveyCount--
+          }
+          this.coms.splice(idx, 1)
+        },
+        (c, n) => {
+          c.push(n)
+          if (isSurveyComName(n.name)) {
+            this.surveyCount++
+          }
+        },
+      )
+      this.history.execute(command)
+    },
+    // 更新属性（带历史记录和防抖合并）
+    updateStatus(comIndex: number, configKey: string, newValue: unknown) {
+      const com = this.coms[comIndex]
+      if (!com || !com.status[configKey]) return
+
+      const oldValue = this.getStatusValue(com, configKey)
+
+      const command = createUpdateCommand(
+        this.coms,
+        comIndex,
+        configKey,
+        oldValue,
+        newValue,
+        (coms, idx, key, val) => {
+          this.setStatusValue(coms[idx], key, val)
+        },
+      )
+
+      // 尝试防抖合并
+      const mergeResult = this.debounceMerger.tryMerge(command)
+      if (mergeResult.shouldMerge) {
+        // 需要合并：保留最初的 oldValue，更新 newValue
+        const mergedCommand = createUpdateCommand(
+          this.coms,
+          comIndex,
+          configKey,
+          this.pendingOldValue ?? oldValue,
+          newValue,
+          (coms, idx, key, val) => {
+            this.setStatusValue(coms[idx], key, val)
+          },
+        )
+        // 替换历史栈中最后一个命令
+        this.history.replaceCurrent(mergedCommand)
+        // 执行更新
+        this.setStatusValue(com, configKey, newValue)
+      } else {
+        // 不需要合并：记录 oldValue 并执行新命令
+        this.pendingOldValue = oldValue
+        this.history.execute(command)
+      }
+    },
+    // 移动组件（带历史记录）
+    moveCom(oldIndex: number, newIndex: number) {
+      const command = createMoveCommand(this.coms, oldIndex, newIndex)
+      this.history.execute(command)
+    },
+    // 撤销
+    undo() {
+      this.debounceMerger.clear()
+      this.pendingOldValue = null
+      this.history.undo()
+    },
+    // 重做
+    redo() {
+      this.debounceMerger.clear()
+      this.pendingOldValue = null
+      this.history.redo()
+    },
+    // 重置
+    resetComs() {
+      this.surveyCount = 0
+      this.currentComponentIndex = -1
+      this.coms = initStore()
+      this.history.clear()
+      this.debounceMerger.clear()
+      this.pendingOldValue = null
+    },
+    // 还原已有问卷的仓库状态
+    setStore(storeStatus: SurveyDBData) {
+      this.surveyCount = storeStatus.surveyCount
+      this.currentComponentIndex = -1
+      this.coms = storeStatus.coms
+      this.history.clear()
+      this.debounceMerger.clear()
+      this.pendingOldValue = null
+    },
+    // 初始化仓库
+    initStore() {
+      this.surveyCount = 0
+      this.currentComponentIndex = -1
+      this.coms = initStore()
+      this.history.clear()
+      this.debounceMerger.clear()
+      this.pendingOldValue = null
+    },
+    // 获取状态值
+    getStatusValue(com: Status, configKey: string): unknown {
+      const prop = com.status[configKey]
+      if (!prop) return undefined
+      if ('status' in prop) {
+        return prop.status
+      }
+      if ('currentStatus' in prop) {
+        return prop.currentStatus
+      }
+      return undefined
+    },
+    // 设置状态值
+    setStatusValue(com: Status, configKey: string, value: unknown) {
+      const prop = com.status[configKey]
+      if (!prop) return
+      if ('status' in prop && typeof value === 'string') {
+        prop.status = value
+      }
+      if ('currentStatus' in prop && typeof value === 'number') {
+        prop.currentStatus = value
+      }
+    },
+    // 原有的 actions（保留兼容）
     addOption,
     removeOption,
     setPosition,
@@ -252,37 +420,5 @@ export const useEditorStore = defineStore('editor', {
     setUse,
     setOptionsStatusByIndex,
     setPicLinkByIndex,
-    // 新增题目的时候，也需要取消聚焦
-    addCom(coms: Status[], newCom: Status) {
-      coms.push(newCom)
-      this.currentComponentIndex = -1
-      if (isSurveyComName(newCom.name)) {
-        this.surveyCount++
-      }
-    },
-    removeCom(index: number): void {
-      if (isSurveyComName(this.coms[index].name)) {
-        this.surveyCount--
-      }
-      this.coms.splice(index, 1)
-    },
-    resetComs() {
-      this.surveyCount = 0
-      this.currentComponentIndex = -1
-      this.coms = initStore()
-    },
-    // 还原已有问卷的仓库状态
-    setStore(storeStatus: SurveyDBData) {
-      this.surveyCount = storeStatus.surveyCount
-      this.currentComponentIndex = -1
-      this.coms = storeStatus.coms
-    },
-    // 初始化仓库，有些时候仓库已经有状态了
-    // 创建一个新的问卷的时候，需要初始化仓库
-    initStore() {
-      this.surveyCount = 0
-      this.currentComponentIndex = -1
-      this.coms = initStore()
-    },
   },
 })

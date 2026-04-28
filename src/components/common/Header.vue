@@ -5,7 +5,25 @@
         <el-button :icon="ArrowLeft" circle size="small" @click="goHome" />
       </div>
       <div class="center flex align-items-center space-between pl-15 pr-15">
-        <div v-if="isEditor">
+        <div v-if="isEditor" class="flex align-items-center gap-10">
+          <div class="flex align-items-center">
+            <el-button
+              :disabled="!store.canUndo"
+              size="small"
+              @click="undo"
+              title="撤销 (Ctrl+Z)"
+            >
+              <el-icon><Arrow-Left /></el-icon>
+            </el-button>
+            <el-button
+              :disabled="!store.canRedo"
+              size="small"
+              @click="redo"
+              title="重做 (Ctrl+Y)"
+            >
+              <el-icon><Arrow-Right /></el-icon>
+            </el-button>
+          </div>
           <div v-if="id">
             <el-button type="warning" size="small" @click="update(store, Number(id))"
               >更新问卷</el-button
@@ -30,7 +48,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { ArrowLeft } from '@element-plus/icons-vue'
+import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
 // 路由
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -81,6 +99,14 @@ function saveSurvey() {
   save(store).then((id) => {
     router.push(`/editor/${id}/survey-type`)
   })
+}
+
+function undo() {
+  store.undo()
+}
+
+function redo() {
+  store.redo()
 }
 
 function preview() {

@@ -1,6 +1,11 @@
 <template>
   <div ref="centerContainer" class="center-container">
-    <draggable v-model="store.coms" item-key="index" @start="dragstart">
+    <draggable
+      v-model="store.coms"
+      item-key="index"
+      @start="dragstart"
+      @end="dragend"
+    >
       <template #item="{ element, index }">
         <div
           class="content mb-10 relative"
@@ -48,6 +53,7 @@ const serialNum = computed(() => useSurveyNo(store.coms).value)
 
 const centerContainer = ref<HTMLElement | null>(null) // 明确声明类型
 const componentRefs = ref<(Element | ComponentPublicInstance | null)[]>([])
+let dragOldIndex = -1
 const clickHandle = function (index: number) {
   if (store.currentComponentIndex === index) {
     store.setCurrentComponentIndex(-1)
@@ -97,9 +103,17 @@ function removeCom(index: number) {
     })
 }
 // 拖动开始
-function dragstart() {
+function dragstart(event: { oldIndex: number }) {
+  dragOldIndex = event.oldIndex
   // 拖动开始的时候，将当前选中的组件取消选中
   store.setCurrentComponentIndex(-1)
+}
+// 拖动结束
+function dragend(event: { newIndex: number }) {
+  if (dragOldIndex !== -1 && dragOldIndex !== event.newIndex) {
+    store.moveCom(dragOldIndex, event.newIndex)
+  }
+  dragOldIndex = -1
 }
 </script>
 
