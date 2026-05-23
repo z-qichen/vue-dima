@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm run build-only",
+  "buildCommand": "pnpm run build-only",
   "installCommand": "pnpm install",
   "outputDirectory": "dist",
   "framework": "vite",
