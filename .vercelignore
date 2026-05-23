@@ -1,5 +1,5 @@
 server/
-/EditItems/
+
 node_modules/
 .pnpm-store/
 .git/
