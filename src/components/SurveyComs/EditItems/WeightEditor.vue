@@ -27,7 +27,7 @@
 <script setup lang="ts">
 import type { VueComType, UpdateStatus } from '@/types'
 import { inject } from 'vue'
-import ButtonGroup from './ButtonGroup.vue'
+import ButtonGroup from './buttonGroup.vue'
 const updateStatus = inject<UpdateStatus>('updateStatus')
 const props = defineProps<{
   currentStatus: number

@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import type { VueComType } from '@/types'
 import { inject, ref } from 'vue'
-import ButtonGroup from './ButtonGroup.vue'
+import ButtonGroup from './buttonGroup.vue'
 
 // 定义 props
 const props = defineProps<{

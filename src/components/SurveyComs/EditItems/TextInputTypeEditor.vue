@@ -25,7 +25,7 @@
 import { Document, DocumentRemove } from '@element-plus/icons-vue'
 import type { VueComType, UpdateStatus } from '@/types'
 import { inject } from 'vue'
-import ButtonGroup from './ButtonGroup.vue'
+import ButtonGroup from './buttonGroup.vue'
 const updateStatus = inject<UpdateStatus>('updateStatus')
 
 const props = defineProps<{
