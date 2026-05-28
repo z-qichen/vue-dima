@@ -41,16 +41,16 @@
         </div>
       </div>
       <div class="right flex justify-content-center align-items-center">
-        <el-avatar :size="30" :src="avatar" />
+        <Avator />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
+import Avator from '@/components/common/Avator.vue'
 // 路由
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -76,7 +76,6 @@ const props = defineProps({
     default: '',
   },
 })
-const avatar = ref('https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
 // 重置题目
 function reset() {
   ElMessageBox.confirm('是否确定重置试卷？已有题目将全部删除', '提示', {

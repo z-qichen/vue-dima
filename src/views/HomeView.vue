@@ -2,8 +2,11 @@
   <div class="home-page">
     <header class="home-header">
       <div class="brand">
-        <div class="brand-mark"></div>
+        <img class="brand-mark" src="@/assets/images/logo.png" alt="logo" />
         <span class="brand-name">启承问卷系统</span>
+      </div>
+      <div class="home-avator">
+        <Avator></Avator>
       </div>
     </header>
 
@@ -98,6 +101,7 @@ import type { SurveyDBReturnData } from '@/types'
 import { getSurveys } from '@/db/operation'
 import { remove } from '@/utils/dboperate'
 
+import Avator from '@/components/common/Avator.vue'
 const tableData = ref<SurveyDBReturnData[]>([])
 
 function getSurveyData() {
@@ -170,25 +174,12 @@ const formatSurveyDate = (date: number) => {
 .brand-mark {
   width: 42px;
   height: 42px;
-  position: relative;
   border-radius: 12px;
-  background: linear-gradient(135deg, #1ad176 0%, #0a75ff 100%);
-}
-
-.brand-mark::before {
-  content: '';
-  width: 22px;
-  height: 12px;
-  position: absolute;
-  left: 9px;
-  top: 12px;
-  border-left: 5px solid #fff;
-  border-bottom: 5px solid #fff;
-  transform: rotate(-45deg);
+  object-fit: cover;
 }
 
 .brand-name {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
   letter-spacing: 0;
 }
@@ -288,6 +279,7 @@ const formatSurveyDate = (date: number) => {
   height: 54px;
   display: flex;
   align-items: center;
+  font-size: 24px;
 }
 
 .content-header h1 {
@@ -299,13 +291,15 @@ const formatSurveyDate = (date: number) => {
 
 .survey-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(276px, 276px));
+  grid-template-columns: repeat(auto-fill, 211.5px);
   gap: 24px;
   align-items: start;
 }
 
 .survey-card {
-  width: 276px;
+  width: 211.5px;
+  height: 204.75px;
+  box-sizing: border-box;
   overflow: hidden;
   border: 1px solid #e5e6eb;
   border-radius: 6px;
@@ -314,7 +308,7 @@ const formatSurveyDate = (date: number) => {
 }
 
 .survey-cover {
-  height: 148px;
+  height: 100px;
   position: relative;
   overflow: hidden;
   background:
@@ -443,15 +437,15 @@ const formatSurveyDate = (date: number) => {
 }
 
 .survey-card-body {
-  padding: 18px 20px 14px;
+  padding: 10px 16px 10px;
 }
 
 .survey-card-body h2 {
-  min-height: 28px;
-  margin: 0 0 16px;
+  min-height: 22px;
+  margin: 0 0 8px;
   overflow: hidden;
   color: #000;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 700;
   line-height: 1.4;
   text-overflow: ellipsis;
@@ -478,7 +472,7 @@ const formatSurveyDate = (date: number) => {
 
 .survey-actions {
   min-height: 28px;
-  margin-top: 14px;
+  margin-top: 8px;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -543,6 +537,7 @@ const formatSurveyDate = (date: number) => {
   .brand-mark {
     width: 34px;
     height: 34px;
+    border-radius: 10px;
   }
 
   .brand-name {
