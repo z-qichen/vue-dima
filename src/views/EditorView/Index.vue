@@ -130,7 +130,7 @@ onUnmounted(() => {
   padding: 20px;
   // Header的高度50px，上下padding 20px
   height: calc(100vh - 50px - 40px);
-  background: url('@/assets/imgs/editor_background.png');
+  background: #f0f2f5;
   position: fixed;
   top: 50px;
 }

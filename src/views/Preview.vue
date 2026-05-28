@@ -133,7 +133,7 @@ function copyLink() {
 .preview-container {
   width: 100vw;
   min-height: 100vh;
-  background: url('@/assets/imgs/editor_background.png');
+  background: #f0f2f5;
 }
 .center {
   width: 800px;
