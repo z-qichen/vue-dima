@@ -7,29 +7,17 @@
       <div class="center flex align-items-center space-between pl-15 pr-15">
         <div v-if="isEditor" class="flex align-items-center gap-10">
           <div class="flex align-items-center">
-            <el-button
-              :disabled="!store.canUndo"
-              size="small"
-              :class="{ 'shadow-heavy': store.canUndo }"
-              @click="undo"
-              title="撤销 (Ctrl+Z)"
-            >
+            <el-button :disabled="!store.canUndo" size="small" :class="{ 'shadow-heavy': store.canUndo }" @click="undo"
+              title="撤销 (Ctrl+Z)">
               <el-icon><Arrow-Left /></el-icon>
             </el-button>
-            <el-button
-              :disabled="!store.canRedo"
-              size="small"
-              :class="{ 'shadow-heavy': store.canRedo }"
-              @click="redo"
-              title="重做 (Ctrl+Y)"
-            >
+            <el-button :disabled="!store.canRedo" size="small" :class="{ 'shadow-heavy': store.canRedo }" @click="redo"
+              title="重做 (Ctrl+Y)">
               <el-icon><Arrow-Right /></el-icon>
             </el-button>
           </div>
           <div v-if="id" style="margin-left: 100px;">
-            <el-button type="warning" size="small" @click="update(store, Number(id))"
-              >更新问卷</el-button
-            >
+            <el-button type="warning" size="small" @click="update(store, Number(id))">更新问卷</el-button>
           </div>
           <div v-else style="margin-left: 100px;">
             <el-button type="danger" size="small" @click="reset">重置问卷</el-button>
@@ -60,6 +48,7 @@ import { save, update } from '@/utils/dboperate'
 import type { EditorStore } from '@/types'
 // 仓库
 import { useEditorStore } from '@/stores/useEditor'
+
 const store = useEditorStore() as EditorStore
 
 const goHome = () => {
@@ -98,6 +87,7 @@ function reset() {
 // 保存题目
 function saveSurvey() {
   save(store).then((id) => {
+
     router.push(`/editor/${id}/survey-type`)
   })
 }
@@ -116,8 +106,11 @@ function preview() {
     cancelButtonText: '取消',
     type: 'warning',
   })
-    .then(() => {
+    .then((value) => {
       if (props.id) {
+        // 放置更新问卷请求
+        //是否请求成功不影响本地问卷同步
+
         // 说明是更新
         update(store, Number(props.id)).then(() => {
           router.push({
@@ -127,6 +120,9 @@ function preview() {
         })
       } else {
         // 说明是新建
+        //是否请求成功不影响本地问卷同步
+        console.log(value);
+
         save(store).then((id) => {
           router.push({
             path: `/preview/${id}`,
@@ -146,16 +142,19 @@ function preview() {
   width: 100%;
   height: 50px;
   border-bottom: 1px solid var(--border-color);
+
   .left {
     width: 60px;
     height: 100%;
   }
+
   .center {
     flex: 1;
     height: 100%;
     border-left: 1px solid var(--border-color);
     border-right: 1px solid var(--border-color);
   }
+
   .right {
     width: 80px;
     height: 100%;

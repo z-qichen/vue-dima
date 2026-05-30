@@ -1,8 +1,8 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { saveSurvey, updateSurvey, deleteSurvey } from '@/db/operation'
-// 类型
+import { saveSurvey, updateSurvey, deleteSurvey, getSurveyById } from '@/db/operation'
 import type { EditorStore } from '@/types'
-// 保存试卷
+import { saveUserQustion, changeUserQustion, deleteSurveyApi } from '@/api/user'
+
 export function save(store: EditorStore) {
   return new Promise((resolve, reject) => {
     ElMessageBox.prompt('请输入问卷标题', '提示', {
@@ -11,15 +11,23 @@ export function save(store: EditorStore) {
       type: 'info',
     })
       .then(({ value }) => {
+        const createDate = new Date().getTime()
         const surveyToSave = {
-          createDate: new Date().getTime(),
-          updateDate: new Date().getTime(),
+          createDate,
+          updateDate: createDate,
           title: value,
           surveyCount: store.surveyCount,
           coms: JSON.parse(JSON.stringify(store.coms)),
         }
         saveSurvey(surveyToSave)
           .then((id) => {
+            saveUserQustion(value, undefined, createDate, store.surveyCount, store.coms)
+              .then((res) => {
+                if (res.code === 200 && res.data?._id) {
+                  updateSurvey(id, { _id: res.data._id })
+                }
+              })
+              .catch(() => {})
             resolve(id)
             ElMessage({
               type: 'success',
@@ -38,7 +46,6 @@ export function save(store: EditorStore) {
   })
 }
 
-// 更新试卷
 export function update(store: EditorStore, id: number) {
   return new Promise((resolve, reject) => {
     updateSurvey(id, {
@@ -46,7 +53,13 @@ export function update(store: EditorStore, id: number) {
       surveyCount: store.surveyCount,
       coms: JSON.parse(JSON.stringify(store.coms)),
     })
-      .then(() => {
+      .then(async () => {
+        try {
+          const survey = await getSurveyById(id)
+          if (survey?._id) {
+            changeUserQustion(survey._id, survey.title, survey.createDate, store.surveyCount, store.coms)
+          }
+        } catch {}
         resolve(void 0)
         ElMessage({
           type: 'success',
@@ -69,16 +82,19 @@ export function remove(id: number) {
       cancelButtonText: '取消',
       type: 'warning',
     })
-      .then(() => {
-        deleteSurvey(id)
-          .then(() => {
-            resolve(void 0)
-            ElMessage.success('删除成功')
-          })
-          .catch((e) => {
-            reject(e)
-            console.log('保存失败')
-          })
+      .then(async () => {
+        try {
+          const survey = await getSurveyById(id)
+          await deleteSurvey(id)
+          if (survey?._id) {
+            deleteSurveyApi(survey._id).catch(() => {})
+          }
+        } catch (e) {
+          reject(e)
+          return
+        }
+        resolve(void 0)
+        ElMessage.success('删除成功')
       })
       .catch(() => {
         console.log('取消删除')

@@ -5,6 +5,7 @@ export interface SurveyDBData {
   title: string
   surveyCount: number
   coms: Status[]
+  _id?: string
 }
 
 export interface SurveyDBReturnData extends SurveyDBData {
