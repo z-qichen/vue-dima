@@ -6,6 +6,7 @@ interface ApiResponse<T = any> {
   data?: T
 }
 
+//实际发送请求
 async function request<T = any>(url: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
   const token = localStorage.getItem('token')
 

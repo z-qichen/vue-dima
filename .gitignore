@@ -35,3 +35,9 @@ coverage
 
 # Vitest
 __screenshots__/
+
+# 项目多余文件
+package-lock.json
+.gitconfig
+git-setup.bat
+*总结.md
