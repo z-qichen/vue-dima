@@ -1,0 +1,167 @@
+<template>
+  <div>
+    <div class="container flex self-start align-items-center border-box">
+      <div class="left flex justify-content-center align-items-center">
+        <el-button :icon="ArrowLeft" circle size="small" @click="goHome" />
+      </div>
+      <div class="center flex align-items-center space-between pl-15 pr-15">
+        <div v-if="isEditor" class="flex align-items-center gap-10">
+          <div class="flex align-items-center">
+            <el-button :disabled="!store.canUndo" size="small" :class="{ 'shadow-heavy': store.canUndo }" @click="undo"
+              title="撤销 (Ctrl+Z)">
+              <el-icon><Arrow-Left /></el-icon>
+            </el-button>
+            <el-button :disabled="!store.canRedo" size="small" :class="{ 'shadow-heavy': store.canRedo }" @click="redo"
+              title="重做 (Ctrl+Y)">
+              <el-icon><Arrow-Right /></el-icon>
+            </el-button>
+          </div>
+          <div v-if="id" style="margin-left: 100px;">
+            <el-button type="warning" size="small" @click="update(store, Number(id))">更新问卷</el-button>
+          </div>
+          <div v-else style="margin-left: 100px;">
+            <el-button type="danger" size="small" @click="reset">重置问卷</el-button>
+            <el-button type="success" size="small" @click="saveSurvey">保存问卷</el-button>
+          </div>
+        </div>
+        <div v-if="isEditor">
+          <el-button type="primary" size="small" @click="preview">预览</el-button>
+        </div>
+      </div>
+      <div class="right flex justify-content-center align-items-center">
+        <Avator />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
+import Avator from '@/components/common/Avator.vue'
+// 路由
+import { useRouter } from 'vue-router'
+const router = useRouter()
+// 工具方法
+import { save, update } from '@/utils/dboperate'
+// 类型
+import type { EditorStore } from '@/types'
+// 仓库
+import { useEditorStore } from '@/stores/useEditor'
+
+const store = useEditorStore() as EditorStore
+
+const goHome = () => {
+  localStorage.setItem('activeView', 'home')
+  router.push('/')
+}
+const props = defineProps({
+  isEditor: {
+    type: Boolean,
+    required: true,
+  },
+  id: {
+    type: String,
+    default: '',
+  },
+})
+// 重置题目
+function reset() {
+  ElMessageBox.confirm('是否确定重置试卷？已有题目将全部删除', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(() => {
+      store.resetComs()
+      ElMessage({
+        type: 'success',
+        message: '已重置',
+      })
+    })
+    .catch(() => {
+      console.log('取消重置')
+    })
+}
+
+// 保存题目
+function saveSurvey() {
+  save(store).then((id) => {
+
+    router.push(`/editor/${id}/survey-type`)
+  })
+}
+
+function undo() {
+  store.undo()
+}
+
+function redo() {
+  store.redo()
+}
+
+function preview() {
+  ElMessageBox.confirm('预览会保存问卷，是否继续？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then((value) => {
+      if (props.id) {
+        // 放置更新问卷请求
+        //是否请求成功不影响本地问卷同步
+
+        // 说明是更新
+        update(store, Number(props.id)).then(() => {
+          router.push({
+            path: `/preview/${props.id}`,
+            state: { from: 'editor' },
+          })
+        })
+      } else {
+        // 说明是新建
+        //是否请求成功不影响本地问卷同步
+        console.log(value);
+
+        save(store).then((id) => {
+          router.push({
+            path: `/preview/${id}`,
+            state: { from: 'editor' },
+          })
+        })
+      }
+    })
+    .catch(() => {
+      console.log('取消预览')
+    })
+}
+</script>
+
+<style scoped lang="scss">
+.container {
+  width: 100%;
+  height: 50px;
+  border-bottom: 1px solid var(--border-color);
+
+  .left {
+    width: 60px;
+    height: 100%;
+  }
+
+  .center {
+    flex: 1;
+    height: 100%;
+    border-left: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+  }
+
+  .right {
+    width: 80px;
+    height: 100%;
+  }
+}
+
+.shadow-heavy {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+</style>
