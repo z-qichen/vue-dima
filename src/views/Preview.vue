@@ -38,7 +38,7 @@ const route = useRoute()
 import { useEditorStore } from '@/stores/useEditor'
 const store = useEditorStore()
 // db
-import { getSurveyById } from '@/db/operation'
+import { getSurveyById, saveQuiz } from '@/db/operation'
 // 工具
 import { restoreComponentStatus } from '@/utils'
 import { v4 as uuidv4 } from 'uuid'
@@ -97,24 +97,17 @@ function genPDF() {
 
 const dialogVisible = ref(false) // 控制弹窗
 const quizLink = ref('') // 问卷链接
-// 生成在线问卷
-function genQuiz() {
+// 生成本地问卷分享链接
+async function genQuiz() {
   const id = uuidv4()
-  // 将问卷信息和唯一ID保存到服务器
-  fetch('/api/saveQuiz', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      id,
-      quizData: {
-        coms: JSON.stringify(store.coms),
-        surveyCount: store.surveyCount,
-      },
-    }),
+  // 将问卷信息保存到本地 IndexedDB
+  await saveQuiz({
+    id,
+    coms: JSON.parse(JSON.stringify(store.coms)),
+    surveyCount: store.surveyCount,
+    createDate: new Date().getTime(),
   })
-  // 打开对话框，显示在线答题链接
+  // 打开对话框，显示答题链接
   quizLink.value = `${window.location.origin}/quiz/${id}`
   dialogVisible.value = true
 }

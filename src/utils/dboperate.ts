@@ -1,7 +1,6 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { saveSurvey, updateSurvey, deleteSurvey, getSurveyById } from '@/db/operation'
+import { saveSurvey, updateSurvey, deleteSurvey } from '@/db/operation'
 import type { EditorStore } from '@/types'
-import { saveUserQustion, changeUserQustion, deleteSurveyApi } from '@/api/user'
 
 export function save(store: EditorStore) {
   return new Promise((resolve, reject) => {
@@ -21,13 +20,6 @@ export function save(store: EditorStore) {
         }
         saveSurvey(surveyToSave)
           .then((id) => {
-            saveUserQustion(value, undefined, createDate, store.surveyCount, store.coms)
-              .then((res) => {
-                if (res.code === 200 && res.data?._id) {
-                  updateSurvey(id, { _id: res.data._id })
-                }
-              })
-              .catch(() => {})
             resolve(id)
             ElMessage({
               type: 'success',
@@ -53,13 +45,7 @@ export function update(store: EditorStore, id: number) {
       surveyCount: store.surveyCount,
       coms: JSON.parse(JSON.stringify(store.coms)),
     })
-      .then(async () => {
-        try {
-          const survey = await getSurveyById(id)
-          if (survey?._id) {
-            changeUserQustion(survey._id, survey.title, survey.createDate, store.surveyCount, store.coms)
-          }
-        } catch {}
+      .then(() => {
         resolve(void 0)
         ElMessage({
           type: 'success',
@@ -84,11 +70,7 @@ export function remove(id: number) {
     })
       .then(async () => {
         try {
-          const survey = await getSurveyById(id)
           await deleteSurvey(id)
-          if (survey?._id) {
-            deleteSurveyApi(survey._id).catch(() => {})
-          }
         } catch (e) {
           reject(e)
           return

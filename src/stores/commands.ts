@@ -45,7 +45,7 @@ export function createRemoveCommand(
   coms: Status[],
   index: number,
   removeFn: (index: number) => void,
-  addFn: (coms: Status[], newCom: Status) => void,
+  _addFn: (coms: Status[], newCom: Status) => void,
 ): Command {
   const removedCom = deepCloneStatus(coms[index])
   return {

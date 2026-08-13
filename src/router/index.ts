@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import type { Material } from '@/types'
-import login from '@/views/Login.vue'
 import { useMaterialStore } from '@/stores/useMaterial'
 
 const router = createRouter({
@@ -9,12 +8,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/login',
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: login,
+      redirect: '/home',
     },
     {
       path: '/home',
@@ -250,19 +244,6 @@ const router = createRouter({
 })
 
 router.beforeEach((to, _from, next) => {
-  const token = localStorage.getItem('token')
-
-  if (to.path === '/login' && token) {
-    return next('/home')
-  }
-
-  const publicPaths = ['/login', '/preview', '/quiz']
-  const isPublic = publicPaths.some((p) => to.path.startsWith(p))
-
-  if (!token && !isPublic) {
-    return next('/login')
-  }
-
   const activeView = localStorage.getItem('activeView')
   const store = useMaterialStore()
   if (activeView === 'materials' && to.name) {

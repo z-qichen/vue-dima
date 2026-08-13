@@ -4,11 +4,9 @@
       <div class="top flex justify-content-center align-items-center">
         <el-upload
           class="avatar-uploader"
-          action="/api/upload"
-          name="image"
           :show-file-list="false"
-          :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
+          :http-request="uploadLocal"
         >
           <img v-if="imageUrl" :src="imageUrl" class="avatar" />
           <div v-else>
@@ -59,11 +57,16 @@ watch(
   () => props.value,
   async (newVal) => {
     if (newVal) {
-      const response = await fetch(newVal)
-      const blob = await response.blob()
-      // 使用 Blob 创建 File 对象
-      const file = new File([blob], 'filename.jpg', { type: blob.type })
-      imageUrl.value = URL.createObjectURL(file)
+      // base64 图片直接使用，旧的外链地址才需要拉取转换
+      if (newVal.startsWith('data:')) {
+        imageUrl.value = newVal
+      } else {
+        const response = await fetch(newVal)
+        const blob = await response.blob()
+        // 使用 Blob 创建 File 对象
+        const file = new File([blob], 'filename.jpg', { type: blob.type })
+        imageUrl.value = URL.createObjectURL(file)
+      }
     } else {
       imageUrl.value = ''
     }
@@ -71,12 +74,23 @@ watch(
   { immediate: true },
 )
 
-const handleAvatarSuccess: UploadProps['onSuccess'] = async (response) => {
-  if (getPicLink)
-    getPicLink({
-      index: props.index,
-      link: response.imageUrl,
-    })
+// 本地读取图片为 base64，并写入问卷状态
+const uploadLocal: UploadProps['httpRequest'] = (options) => {
+  return new Promise((resolve) => {
+    const file = options.file as File
+    const reader = new FileReader()
+    reader.onload = () => {
+      if (getPicLink) {
+        getPicLink({
+          index: props.index,
+          link: reader.result as string,
+        })
+      }
+      resolve({})
+    }
+    reader.onerror = () => resolve({})
+    reader.readAsDataURL(file)
+  })
 }
 
 const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
